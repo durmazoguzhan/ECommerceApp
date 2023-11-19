@@ -13,7 +13,7 @@ const Sidebar = () => {
         Swal.fire({
             icon: 'success',
             title: 'Çıkış Başarılı',
-            text: 'Teşekürrler'
+            text: 'Teşekkürler'
         })
         dispatch({ type: "user/logout" })
         history("/login");

@@ -1,24 +1,48 @@
-import React from 'react'
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-const Map = () => {
-    const mapStyles = {
-        height: "21vh",
-        width: "100%",
-        margin: "0 0 0 0"
-    };
-    const defaultCenter = {
-        lat: 41.8136822, lng: 28.5635596
-    }
-    return (
-        <>
-            <div className="col-lg-12">
-                <div className="map_area">
-                    <LoadScript>
-                        <GoogleMap mapContainerStyle={mapStyles} zoom={10} center={defaultCenter}></GoogleMap>
-                    </LoadScript>
-                </div>
-            </div>
-        </>
-    )
+import React from "react";
+import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
+
+const containerStyle = {
+  height: "21vh",
+  width: "100%",
+  margin: "0 0 0 0",
+};
+
+const center = {
+  lat: 41.0750607,
+  lng: 29.0176034,
+};
+
+const apiKey = "AIzaSyBFqazvW4WBh_XnDcBET9SSjvwjL7EFJks";
+
+function Map() {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: apiKey,
+  });
+
+  const [map, setMap] = React.useState(null);
+
+  const onLoad = React.useCallback(function callback(map) {
+    map.setZoom(17);
+    setMap(map);
+  }, []);
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
+  return isLoaded ? (
+    <div className="col-lg-12">
+      <div className="map_area">
+        <GoogleMap mapContainerStyle={containerStyle} center={center} onLoad={onLoad} onUnmount={onUnmount}>
+          <MarkerF position={center} icon={{ url: require("../../assets/img/inveshopmarker.png") }}></MarkerF>
+          <></>
+        </GoogleMap>
+      </div>
+    </div>
+  ) : (
+    <></>
+  );
 }
-export default Map
+
+export default Map;
