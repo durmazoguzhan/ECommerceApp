@@ -2,7 +2,7 @@ using AutoMapper;
 using Inveon.Services.ProductAPI;
 using Inveon.Services.ProductAPI.DbContexts;
 using Inveon.Services.ProductAPI.Repositories;
-using Inveon.Services.ProductAPI.Repository;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +27,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

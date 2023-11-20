@@ -2,7 +2,6 @@
 using Inveon.Services.ProductAPI.DbContexts;
 using Inveon.Services.ProductAPI.Models.DTOs;
 using Inveon.Services.ProductAPI.Models.Entities;
-using Inveon.Services.ProductAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inveon.Services.ProductAPI.Repositories
@@ -23,7 +22,7 @@ namespace Inveon.Services.ProductAPI.Repositories
         {
             Product product = _mapper.Map<ProductDto, Product>(productDto);
             //gelen ProductDto nun içindeki ProductId 0 dan büyük ise güncelleme yapılacak
-            if (product.ProductId > 0)
+            if (product.Id > 0)
             {
                 _db.Products.Update(product);
             }
@@ -42,7 +41,7 @@ namespace Inveon.Services.ProductAPI.Repositories
         {
             try
             {
-                Product product = await _db.Products.FirstOrDefaultAsync(u => u.ProductId == productId);
+                Product product = await _db.Products.FirstOrDefaultAsync(u => u.Id == productId);
                 if (product == null)
                 {
                     return false;
@@ -61,7 +60,7 @@ namespace Inveon.Services.ProductAPI.Repositories
         {
             //linq select * from Product where Id=productId
             //{Id:1,Name : Product1}
-            Product product = await _db.Products.Where(x => x.ProductId == productId).FirstOrDefaultAsync();
+            Product product = await _db.Products.Where(x => x.Id == productId).FirstOrDefaultAsync();
             return _mapper.Map<ProductDto>(product);
         }
 

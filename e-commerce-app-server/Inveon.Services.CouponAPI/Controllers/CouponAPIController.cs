@@ -14,7 +14,7 @@ namespace Inveon.Services.CouponAPI.Controllers
         public CouponAPIController(ICouponRepository couponRepository)
         {
             _couponRepository = couponRepository;
-            this._response = new ResponseDto();
+            _response = new ResponseDto();
         }
 
         [HttpGet("{code}")]

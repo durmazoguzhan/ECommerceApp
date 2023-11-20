@@ -1,6 +1,6 @@
 ﻿using Inveon.Services.ProductAPI.Models.DTOs;
 
-namespace Inveon.Services.ProductAPI.Repository
+namespace Inveon.Services.ProductAPI.Repositories
 {
     public interface IProductRepository
     {
