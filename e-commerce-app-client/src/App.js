@@ -3,8 +3,6 @@ import loadable from "./components/Common/loadable";
 import pMinDelay from "p-min-delay";
 import Loader from "./components/Common/Loader";
 import "./assets/css/style.css";
-import "./assets/css/animate.min.css";
-import "./assets/css/color.css";
 
 const Fashion = loadable(() => pMinDelay(import("./page/"), 250), { fallback: <Loader /> });
 const Register = loadable(() => pMinDelay(import("./page/register"), 250), { fallback: <Loader /> });
