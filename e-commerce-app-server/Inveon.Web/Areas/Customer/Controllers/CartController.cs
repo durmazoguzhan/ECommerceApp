@@ -127,7 +127,7 @@ namespace Inveon.Web.Areas.Customer.Controllers
 
                 foreach (var detail in cartDto.CartDetails)
                 {
-                    cartDto.CartHeader.OrderTotal += detail.Product.Price * detail.Count;
+                    cartDto.CartHeader.OrderTotal += detail.Product.SalePrice * detail.Count;
                 }
 
                 cartDto.CartHeader.OrderTotal -= cartDto.CartHeader.DiscountTotal;

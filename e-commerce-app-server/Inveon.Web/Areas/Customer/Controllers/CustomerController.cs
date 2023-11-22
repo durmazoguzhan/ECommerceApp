@@ -37,7 +37,6 @@ namespace Inveon.Web.Areas.Customer.Controllers
             return View(list);
         }
 
-        [Authorize]
         public async Task<IActionResult> Details(int productId)
         {
             ProductDto model = new();
@@ -51,7 +50,6 @@ namespace Inveon.Web.Areas.Customer.Controllers
 
         [HttpPost]
         [ActionName("Details")]
-        [Authorize]
         public async Task<IActionResult> DetailsPost(ProductDto productDto)
         {
             var UserId = User.Claims.Where(u => u.Type == "sub")?.FirstOrDefault()?.Value;
@@ -65,10 +63,10 @@ namespace Inveon.Web.Areas.Customer.Controllers
             CartDetailsDto cartDetails = new CartDetailsDto()
             {
                 Count = productDto.Count,
-                ProductId = productDto.ProductId
+                ProductId = productDto.Id
             };
 
-            var resp = await _productService.GetProductByIdAsync<ResponseDto>(productDto.ProductId, "");
+            var resp = await _productService.GetProductByIdAsync<ResponseDto>(productDto.Id, "");
             if (resp != null && resp.IsSuccess)
             {
                 cartDetails.Product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(resp.Result));

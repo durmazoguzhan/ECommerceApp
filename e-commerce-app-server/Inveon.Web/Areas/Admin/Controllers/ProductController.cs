@@ -46,13 +46,17 @@ namespace Inveon.Web.Areas.Admin.Controllers
 
             ProductDto productDto = new ProductDto
             {
-                ProductId = model.ProductId,
+                Id = model.Id,
                 Name = model.Name,
-                Price = model.Price,
                 Description = model.Description,
-                ImageUrl = yuklenenResimAdi,
-                CategoryName = model.CategoryName,
-                Count = model.Count
+                Images = yuklenenResimAdi,
+                Quantity = model.Quantity,
+                ListPrice = model.ListPrice,
+                SalePrice = model.SalePrice,
+                BrandId = model.BrandId,
+                CreateDate = DateTime.Now,
+                IsActive = model.IsActive,
+                CategoryId = model.CategoryId
             };
 
             var response = await _productService.CreateProductAsync<ResponseDto>(productDto, accessToken);
@@ -73,13 +77,16 @@ namespace Inveon.Web.Areas.Admin.Controllers
 
                 ProductViewModel productViewModel = new ProductViewModel
                 {
-                    ProductId = model.ProductId,
+                    Id = model.Id,
                     Name = model.Name,
-                    Price = model.Price,
                     Description = model.Description,
-                    ImageUrl = model.ImageUrl,
-                    CategoryName = model.CategoryName,
-                    Count = model.Count
+                    Images = model.Images,
+                    Quantity = model.Quantity,
+                    ListPrice = model.ListPrice,
+                    SalePrice = model.SalePrice,
+                    BrandId = model.BrandId,
+                    IsActive = model.IsActive,
+                    CategoryId = model.CategoryId
                 };
 
                 return View(productViewModel);
@@ -94,7 +101,7 @@ namespace Inveon.Web.Areas.Admin.Controllers
 
 
             var accessToken = await HttpContext.GetTokenAsync("access_token");
-            var guncellencekUrun = await _productService.GetProductByIdAsync<ResponseDto>(model.ProductId, accessToken);
+            var guncellencekUrun = await _productService.GetProductByIdAsync<ResponseDto>(model.Id, accessToken);
 
             if (guncellencekUrun != null && guncellencekUrun.IsSuccess)
             {
@@ -104,14 +111,15 @@ namespace Inveon.Web.Areas.Admin.Controllers
                 {
                     //resmini değiştirmek istediğim ürünün database deki kitapResim kolonundaki adına göre
                     // git wwwroot klasörü altındaki Uploads klasöründeki ilgili resmi bul ve sil
-                    string filePath = Path.Combine(_environment.WebRootPath, "Uploads", model2.ImageUrl);
+                    string filePath = Path.Combine(_environment.WebRootPath, "Uploads", model2.Images);
                     System.IO.File.Delete(filePath);
                     string yuklenenResimAdi = ResimYukle(model);
-                    model2.ImageUrl = yuklenenResimAdi;
+                    model2.Images = yuklenenResimAdi;
                     model2.Name = model.Name;
-                    model2.Price = model.Price;
-                    model2.CategoryName = model.CategoryName;
-                    model2.Count = model.Count;
+                    model2.ListPrice = model.ListPrice;
+                    model2.SalePrice = model.SalePrice;
+                    model2.CategoryId = model.CategoryId;
+                    model2.Quantity = model.Quantity;
                     model2.Description = model.Description;
                     var response = await _productService.UpdateProductAsync<ResponseDto>(model2, accessToken);
                     if (response != null && response.IsSuccess)
@@ -141,7 +149,7 @@ namespace Inveon.Web.Areas.Admin.Controllers
             {
                 ProductDto silinecekProductDto = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(silinecekUrun.Result));
 
-                string filePath = Path.Combine(_environment.WebRootPath, "Uploads", silinecekProductDto.ImageUrl);
+                string filePath = Path.Combine(_environment.WebRootPath, "Uploads", silinecekProductDto.Images);
                 System.IO.File.Delete(filePath);
             }
             var response = await _productService.DeleteProductAsync<ResponseDto>(productId, accessToken);

@@ -1,20 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Inveon.Web.Models
+﻿namespace Inveon.Web.Models
 {
     public class ProductDto
     {
-        public ProductDto()
-        {
-            Count = 1;
-        }
-        public int ProductId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
-        public string CategoryName { get; set; }
-        [Range(1, 100)]
+        public string? Description { get; set; }
+        public string Images { get; set; }
+        public int Quantity { get; set; }
+        public double ListPrice { get; set; }
+        public double SalePrice { get; set; }
+        public int BrandId { get; set; }
+        public int CategoryId { get; set; }
+        public DateTime CreateDate { get; set; }
+        public bool IsActive { get; set; }
+
         public int Count { get; set; }
+        public string? Size { get; set; }
     }
 }
