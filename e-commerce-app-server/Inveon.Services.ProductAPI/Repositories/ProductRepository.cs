@@ -21,19 +21,11 @@ namespace Inveon.Services.ProductAPI.Repositories
         public async Task<ProductDto> CreateUpdateProduct(ProductDto productDto)
         {
             Product product = _mapper.Map<ProductDto, Product>(productDto);
-            //gelen ProductDto nun içindeki ProductId 0 dan büyük ise güncelleme yapılacak
             if (product.Id > 0)
-            {
                 _db.Products.Update(product);
-            }
             else
-            {
-                //0 dan böyük değilse yeni bir kayıt eklenecek
-
                 _db.Products.Add(product);
-            }
             await _db.SaveChangesAsync();
-            //kayıt eklendikten sonra databaseden eklenen product objesi geriye produtcDto olarak döndürülür
             return _mapper.Map<Product, ProductDto>(product);
         }
 
@@ -46,20 +38,15 @@ namespace Inveon.Services.ProductAPI.Repositories
                 {
                     return false;
                 }
-                _db.Products.Remove(product); //delete from Product where Id=productId
+                _db.Products.Remove(product);
                 await _db.SaveChangesAsync();
                 return true;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            catch (Exception) { return false; }
         }
 
         public async Task<ProductDto> GetProductById(int productId)
         {
-            //linq select * from Product where Id=productId
-            //{Id:1,Name : Product1}
             Product product = await _db.Products.Where(x => x.Id == productId).FirstOrDefaultAsync();
             return _mapper.Map<ProductDto>(product);
         }

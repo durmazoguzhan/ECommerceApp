@@ -1,6 +1,5 @@
 ﻿using Inveon.Services.ProductAPI.Models.DTOs;
 using Inveon.Services.ProductAPI.Repositories;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inveon.Services.ProductAPI.Controllers
@@ -28,8 +27,7 @@ namespace Inveon.Services.ProductAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages
-                     = new List<string>() { ex.ToString() };
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
             return _response;
         }

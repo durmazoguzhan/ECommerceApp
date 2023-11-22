@@ -2,7 +2,6 @@ using AutoMapper;
 using Inveon.Services.ProductAPI;
 using Inveon.Services.ProductAPI.DbContexts;
 using Inveon.Services.ProductAPI.Repositories;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

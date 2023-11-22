@@ -25,7 +25,7 @@ namespace Inveon.Services.ProductAPI.DbContexts
                 ListPrice = 1495.00,
                 SalePrice = 1200.99,
                 BrandId = 1,
-                CategoryId = 1,
+                CategoryId = 21,
                 CreateDate = DateTime.Now,
                 IsActive = true
             });
@@ -39,7 +39,7 @@ namespace Inveon.Services.ProductAPI.DbContexts
                 ListPrice = 1695.00,
                 SalePrice = 1695.00,
                 BrandId = 1,
-                CategoryId = 1,
+                CategoryId = 9,
                 CreateDate = DateTime.Now,
                 IsActive = true
             });
@@ -53,7 +53,7 @@ namespace Inveon.Services.ProductAPI.DbContexts
                 ListPrice = 250.00,
                 SalePrice = 209.99,
                 BrandId = 2,
-                CategoryId = 2,
+                CategoryId = 8,
                 CreateDate = DateTime.Now,
                 IsActive = true
             });
@@ -67,7 +67,7 @@ namespace Inveon.Services.ProductAPI.DbContexts
                 ListPrice = 1390.00,
                 SalePrice = 1390.00,
                 BrandId = 3,
-                CategoryId = 3,
+                CategoryId = 7,
                 CreateDate = DateTime.Now,
                 IsActive = true
             });
