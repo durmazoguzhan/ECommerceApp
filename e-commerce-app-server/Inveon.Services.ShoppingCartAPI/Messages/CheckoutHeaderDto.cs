@@ -20,6 +20,6 @@ namespace Inveon.Services.ShoppingCartAPI.Messages
         public string ExpiryMonth { get; set; }
         public string ExpiryYear { get; set; }
         public int CartTotalItems { get; set; }
-        public IEnumerable<CartDetailsDto> CartDetails { get; set; }
+        public IEnumerable<CartDetailDto> CartDetails { get; set; }
     }
 }

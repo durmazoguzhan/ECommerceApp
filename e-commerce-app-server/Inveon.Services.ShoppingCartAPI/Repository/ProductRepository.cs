@@ -3,25 +3,25 @@ using Newtonsoft.Json;
 
 namespace Inveon.Services.ShoppingCartAPI.Repository
 {
-    public class CouponRepository : ICouponRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly HttpClient _client;
 
-        public CouponRepository(HttpClient client)
+        public ProductRepository(HttpClient client)
         {
             _client = client;
         }
 
-        public async Task<CouponDto> GetCoupon(string couponName)
+        public async Task<ProductDto> GetProduct(int productId)
         {
-            var response = await _client.GetAsync($"/api/coupon/{couponName}");
+            var response = await _client.GetAsync($"/api/products/{productId}");
             var apiContent = await response.Content.ReadAsStringAsync();
             var resp = JsonConvert.DeserializeObject<ResponseDto>(apiContent);
             if (resp.IsSuccess)
             {
-                return JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(resp.Result));
+                return JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(resp.Result));
             }
-            return new CouponDto();
+            return new ProductDto();
         }
     }
 }

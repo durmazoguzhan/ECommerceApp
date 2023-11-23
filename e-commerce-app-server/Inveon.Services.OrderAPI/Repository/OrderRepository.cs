@@ -28,7 +28,7 @@ namespace Inveon.Services.OrderAPI.Repository
         public async Task UpdateOrderPaymentStatus(int orderHeaderId, bool paid)
         {
             await using var _db = new ApplicationDbContext(_dbContext);
-            var orderHeaderFromDb = await _db.OrderHeaders.FirstOrDefaultAsync(u => u.OrderHeaderId == orderHeaderId);
+            var orderHeaderFromDb = await _db.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
             if (orderHeaderFromDb != null)
             {
                 orderHeaderFromDb.PaymentStatus = paid;

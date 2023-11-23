@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inveon.Services.OrderAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231112112032_OrderAPIDbInit")]
-    partial class OrderAPIDbInit
+    [Migration("20231123222818_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,13 @@ namespace Inveon.Services.OrderAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Inveon.Services.OrderAPI.Models.OrderDetails", b =>
+            modelBuilder.Entity("Inveon.Services.OrderAPI.Models.OrderDetail", b =>
                 {
-                    b.Property<int>("OrderDetailsId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailsId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -45,11 +45,10 @@ namespace Inveon.Services.OrderAPI.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductName")
-                        .IsRequired()
+                    b.Property<string>("Size")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderDetailsId");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrderHeaderId");
 
@@ -58,11 +57,11 @@ namespace Inveon.Services.OrderAPI.Migrations
 
             modelBuilder.Entity("Inveon.Services.OrderAPI.Models.OrderHeader", b =>
                 {
-                    b.Property<int>("OrderHeaderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderHeaderId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CVV")
                         .IsRequired()
@@ -122,12 +121,12 @@ namespace Inveon.Services.OrderAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderHeaderId");
+                    b.HasKey("Id");
 
                     b.ToTable("OrderHeaders");
                 });
 
-            modelBuilder.Entity("Inveon.Services.OrderAPI.Models.OrderDetails", b =>
+            modelBuilder.Entity("Inveon.Services.OrderAPI.Models.OrderDetail", b =>
                 {
                     b.HasOne("Inveon.Services.OrderAPI.Models.OrderHeader", "OrderHeader")
                         .WithMany("OrderDetails")

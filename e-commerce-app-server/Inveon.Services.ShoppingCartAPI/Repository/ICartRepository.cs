@@ -5,7 +5,6 @@ namespace Inveon.Services.ShoppingCartAPI.Repository
     public interface ICartRepository
     {
         Task<CartDto> GetCartByUserId(string userId);
-
         CartDto GetCartByUserIdNonAsync(string userId);
         Task<CartDto> CreateUpdateCart(CartDto cartDto);
         Task<bool> RemoveFromCart(int cartDetailsId);

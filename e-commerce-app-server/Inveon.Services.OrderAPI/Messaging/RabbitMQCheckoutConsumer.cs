@@ -12,14 +12,17 @@ namespace Inveon.Services.OrderAPI.Messaging
     public class RabbitMQCheckoutConsumer : BackgroundService
     {
         private readonly OrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
         private IConnection _connection;
         private IModel _channel;
         private readonly IRabbitMQOrderMessageSender _rabbitMQOrderMessageSender;
 
-        public RabbitMQCheckoutConsumer(OrderRepository orderRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
+        public RabbitMQCheckoutConsumer(OrderRepository orderRepository, IProductRepository productRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
         {
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
             _rabbitMQOrderMessageSender = rabbitMQOrderMessageSender;
+
             var factory = new ConnectionFactory
             {
                 HostName = "localhost",
@@ -56,7 +59,7 @@ namespace Inveon.Services.OrderAPI.Messaging
                 UserId = checkoutHeaderDto.UserId,
                 FirstName = checkoutHeaderDto.FirstName,
                 LastName = checkoutHeaderDto.LastName,
-                OrderDetails = new List<OrderDetails>(),
+                OrderDetails = new List<OrderDetail>(),
                 CardNumber = checkoutHeaderDto.CardNumber,
                 CouponCode = checkoutHeaderDto.CouponCode,
                 CVV = checkoutHeaderDto.CVV,
@@ -70,21 +73,22 @@ namespace Inveon.Services.OrderAPI.Messaging
                 Phone = checkoutHeaderDto.Phone,
                 PickupDateTime = checkoutHeaderDto.PickupDateTime
             };
+
             foreach (var detailList in checkoutHeaderDto.CartDetails)
             {
-                OrderDetails orderDetails = new()
+                var detailProduct = _productRepository.GetProduct(detailList.ProductId).Result;
+                OrderDetail orderDetails = new()
                 {
                     ProductId = detailList.ProductId,
-                    ProductName = detailList.Product.Name,
-                    Price = detailList.Product.Price,
-                    Count = detailList.Count
+                    Price = detailProduct.SalePrice,
+                    Count = detailList.Count,
+                    Size = detailList.Size
                 };
                 orderHeader.CartTotalItems += detailList.Count;
                 orderHeader.OrderDetails.Add(orderDetails);
             }
 
             await _orderRepository.AddOrder(orderHeader);
-
 
             PaymentRequestMessage paymentRequestMessage = new()
             {
@@ -93,15 +97,13 @@ namespace Inveon.Services.OrderAPI.Messaging
                 CVV = orderHeader.CVV,
                 ExpiryMonth = orderHeader.ExpiryMonth,
                 ExpiryYear = orderHeader.ExpiryYear,
-                OrderId = orderHeader.OrderHeaderId,
+                OrderId = orderHeader.Id,
                 OrderTotal = orderHeader.OrderTotal,
                 Email = orderHeader.Email
             };
 
             try
             {
-                //await _messageBus.PublishMessage(paymentRequestMessage, orderPaymentProcessTopic);
-                //await args.CompleteMessageAsync(args.Message);
                 _rabbitMQOrderMessageSender.SendMessage(paymentRequestMessage, "orderpaymentprocesstopic");
             }
             catch (Exception e)

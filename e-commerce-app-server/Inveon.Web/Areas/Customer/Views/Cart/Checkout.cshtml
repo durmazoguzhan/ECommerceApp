@@ -11,7 +11,7 @@
 {
     <form method="post">
         <input asp-for="CartHeader.UserId" type="hidden" />
-        <input asp-for="CartHeader.CartHeaderId" type="hidden" />
+        <input asp-for="CartHeader.Id" type="hidden" />
         <input asp-for="CartHeader.CouponCode" type="hidden" />
         <input asp-for="CartHeader.DiscountTotal" type="hidden" />
         <input asp-for="CartHeader.OrderTotal" type="hidden" />
@@ -86,20 +86,19 @@
 
                             <hr />
 
-                            @foreach (var cartObj in Model.CartDetails)
+                            @foreach (var product in ViewBag.CartDetailProducts as List<ProductDto>)
                             {
-
                                 <div class="row h-100">
                                     <div class="col-6">
-                                        <span style="font-size:20px">@cartObj.Product.Name</span>
+                                        <span style="font-size:20px">@product.Name</span>
                                     </div>
 
                                     <div class="col-3" style="font-size:11px;">
-                                        <span style="font-size:17px;">@cartObj.Product.SalePrice TL</span>
+                                        <span style="font-size:17px;">@product.SalePrice TL</span>
 
                                     </div>
                                     <div class="col-3" style="font-size:11px;">
-                                        <span style="font-size:17px;"> @cartObj.Count</span>
+                                        <span style="font-size:17px;">@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Count</span>
                                     </div>
                                 </div>
                                 <hr />

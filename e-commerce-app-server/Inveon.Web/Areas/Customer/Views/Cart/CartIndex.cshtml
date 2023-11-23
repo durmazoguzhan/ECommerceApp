@@ -1,14 +1,11 @@
 ﻿@model Inveon.Web.Models.CartDto
 
-
-
-@if (Model.CartHeader != null && Model.CartDetails.Count() > 0)
+@if (Model != null && Model.CartHeader != null && Model.CartDetails.Count() > 0)
 {
-
     <form method="post">
         <br />
         <input asp-for="CartHeader.UserId" type="hidden" />
-        <input asp-for="CartHeader.CartHeaderId" type="hidden" />
+        <input asp-for="CartHeader.Id" type="hidden" />
         <div class="">
             <div class="card border mt-4 container">
                 <div class="card-header bg-dark text-light ml-0 row ">
@@ -40,24 +37,24 @@
                     </div>
 
                     <hr />
-                    @foreach (var cartObj in Model.CartDetails)
+                    @foreach (var product in ViewBag.CartDetailProducts as List<ProductDto>)
                     {
                         <div class="row h-100">
                             <div class="col-4 col-md-2 text-center py-2">
-                                <img src="~/Uploads/@cartObj.Product.Images.Split(',')[0]" class="rounded" width="100%" />
+                                <img src="~/Uploads/@product.Images.Split(',')[0]" class="rounded" width="100%" />
                             </div>
                             <div class="col-8 col-md-5">
-                                <h5>@cartObj.Product.Name</h5>
-                                <div style="font-size:11px;">@Html.Raw(cartObj.Product.Description)</div>
+                                <h5>@product.Name</h5>
+                                <div style="font-size:11px;">@Html.Raw(product.Description)</div>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@string.Format("{0:c}",cartObj.Product.SalePrice) </span>
+                                <span style="font-size:17px;">@string.Format("{0:c}",product.SalePrice) </span>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;"> @cartObj.Count</span>
+                                <span style="font-size:17px;">@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Count</span>
                             </div>
                             <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
-                                <a asp-action="Remove" asp-route-cartDetailsId="@cartObj.CartDetailsId" class="btn btn-outline-danger">
+                                <a asp-action="Remove" asp-route-cartDetailsId="@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Id" class="btn btn-outline-danger">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>

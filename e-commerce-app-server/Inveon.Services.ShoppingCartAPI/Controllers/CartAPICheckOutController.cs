@@ -17,13 +17,17 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
 
         private readonly ICartRepository _cartRepository;
         private readonly ICouponRepository _couponRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ResponseDto _response;
         private readonly IRabbitMQCartMessageSender _rabbitMQCartMessageSender;
+
+
         public CartAPICheckOutController(ICartRepository cartRepository,
-            ICouponRepository couponRepository, IRabbitMQCartMessageSender rabbitMQCartMessageSender)
+            ICouponRepository couponRepository, IProductRepository productRepository,IRabbitMQCartMessageSender rabbitMQCartMessageSender)
         {
             _cartRepository = cartRepository;
             _couponRepository = couponRepository;
+            _productRepository = productRepository;
             _rabbitMQCartMessageSender = rabbitMQCartMessageSender;
             _response = new ResponseDto();
         }
@@ -58,7 +62,7 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
                 Payment payment = PaymentProcess(checkoutHeader);
                 await _cartRepository.ClearCart(checkoutHeader.UserId);
 
-                string mailBody = $@"<div><div style=""padding:5%;align-items:center;justify-content:center;background-color:#2f4f4f""><h2 style=""color:#fff;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',sans-serif"">Siparişiniz için teşekkürler</p></div><br><div><p>Ödemeniz alındı, aşağıdaki tablodan sipariş detayınızı görüntüleyebilirsiniz.</p></div><br><div style=""font-family:sans-serif""><h4>Sipariş Numaranız: {checkoutHeader.CartHeaderId}</h4><table style=""border:.5vh;border-style:solid;border-radius:3%;padding:1%""><thead><tr><th>Ürün Adı</th><th>Adet</th><th>Fiyat</th></tr></thead><tbody><tr><td>{checkoutHeader.CartDetails.First().Product.Name}</td><td>{checkoutHeader.CartDetails.First().Count}</td><td>{checkoutHeader.CartDetails.First().Product.Price}</td></tr></tbody></table></div></div>";
+                string mailBody = $@"<div><div style=""padding:5%;align-items:center;justify-content:center;background-color:#2f4f4f""><h2 style=""color:#fff;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',sans-serif"">Siparişiniz için teşekkürler</p></div><br><div><p>Ödemeniz alındı, aşağıdaki tablodan sipariş detayınızı görüntüleyebilirsiniz.</p></div><br><div style=""font-family:sans-serif""><h4>Sipariş Numaranız: {checkoutHeader.CartHeaderId}</h4><table style=""border:.5vh;border-style:solid;border-radius:3%;padding:1%""><thead><tr><th>Ürün Adı</th><th>Adet</th><th>Fiyat</th></tr></thead><tbody><tr><td>{_productRepository.GetProduct(checkoutHeader.CartDetails.First().ProductId).Result.Name}</td><td>{checkoutHeader.CartDetails.First().Count}</td><td>{_productRepository.GetProduct(checkoutHeader.CartDetails.First().ProductId).Result.SalePrice}</td></tr></tbody></table></div></div>";
 
                 MailSender.MailSender.Send(checkoutHeader.Email, "Siparişiniz Alındı", mailBody);
             }
@@ -155,7 +159,7 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             return shippingAddress;
         }
 
-        public List<BasketItem> GetBasketItems(IEnumerable<CartDetailsDto> cartItems)
+        public List<BasketItem> GetBasketItems(IEnumerable<CartDetailDto> cartItems)
         {
             var basketItems = new List<BasketItem>();
 
@@ -163,12 +167,13 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             {
                 for (int i = 0; i < item.Count; i++)
                 {
+                    var product = _productRepository.GetProduct(item.ProductId).Result;
                     basketItems.Add(new BasketItem
                     {
                         Id = item.ProductId.ToString(),
-                        Name = item.Product.Name,
-                        Category1 = item.Product.CategoryName,
-                        Price = item.Product.Price.ToString(),
+                        Name = product.Name,
+                        Category1 = product.CategoryId.ToString(),
+                        Price = product.SalePrice.ToString(),
                         ItemType = BasketItemType.PHYSICAL.ToString()
                     });
                 }

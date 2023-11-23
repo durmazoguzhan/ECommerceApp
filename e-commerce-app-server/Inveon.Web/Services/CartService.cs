@@ -12,10 +12,7 @@ namespace Inveon.Web.Services
             _clientFactory = clientFactory;
         }
 
-
-
-
-        public async Task<T> AddToCartAsync2<T>(CartDto cartDto, string token)
+        public async Task<T> AddToCartAsync<T>(CartDto cartDto, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
@@ -47,8 +44,6 @@ namespace Inveon.Web.Services
                 AccessToken = token
             });
         }
-
-
 
         public async Task<T> GetCartByUserIdAsnyc<T>(string userId, string token)
         {

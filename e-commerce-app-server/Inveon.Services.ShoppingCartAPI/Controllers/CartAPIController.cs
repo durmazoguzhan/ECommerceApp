@@ -1,5 +1,4 @@
 ﻿using Inveon.Services.ShoppingCartAPI.Models.Dto;
-using Inveon.Services.ShoppingCartAPI.RabbitMQSender;
 using Inveon.Services.ShoppingCartAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +10,14 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
     {
         private readonly ICartRepository _cartRepository;
         private readonly ICouponRepository _couponRepository;
-        // private readonly IMessageBus _messageBus;
         protected ResponseDto _response;
-        private readonly IRabbitMQCartMessageSender _rabbitMQCartMessageSender;
-        // IMessageBus messageBus,
+
         public CartAPIController(ICartRepository cartRepository,
-            ICouponRepository couponRepository, IRabbitMQCartMessageSender rabbitMQCartMessageSender)
+            ICouponRepository couponRepository)
         {
             _cartRepository = cartRepository;
             _couponRepository = couponRepository;
-            _rabbitMQCartMessageSender = rabbitMQCartMessageSender;
-            //_messageBus = messageBus;
-            this._response = new ResponseDto();
+            _response = new ResponseDto();
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -41,8 +36,6 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-
-
         [HttpPost]
         [Authorize]
         public async Task<object> Post([FromBody] CartDto cartDto)
@@ -51,7 +44,7 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             {
                 if (cartDto.CartHeader.CouponCode == null)
                 {
-                    cartDto.CartHeader.CouponCode = ""; //
+                    cartDto.CartHeader.CouponCode = "";
                 }
                 CartDto model = await _cartRepository.CreateUpdateCart(cartDto);
                 _response.Result = model;
@@ -130,20 +123,14 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-
-
-
         [HttpPost("Checkout2")]
         public async Task<object> Checkout2(CartDto cartDto)
         {
             try
             {
-
-
                 if (!string.IsNullOrEmpty(cartDto.CartHeader.CouponCode))
                 {
                     CouponDto coupon = await _couponRepository.GetCoupon(cartDto.CartHeader.CouponCode);
-
                 }
 
                 await _cartRepository.ClearCart(cartDto.CartHeader.UserId);

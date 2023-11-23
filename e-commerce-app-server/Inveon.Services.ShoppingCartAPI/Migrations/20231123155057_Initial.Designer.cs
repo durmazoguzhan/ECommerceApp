@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inveon.Services.ShoppingCartAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231104081518_ShoppingCartInit")]
-    partial class ShoppingCartInit
+    [Migration("20231123155057_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,13 +24,13 @@ namespace Inveon.Services.ShoppingCartAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.CartDetails", b =>
+            modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.CartDetail", b =>
                 {
-                    b.Property<int>("CartDetailsId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartDetailsId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CartHeaderId")
                         .HasColumnType("int");
@@ -41,22 +41,23 @@ namespace Inveon.Services.ShoppingCartAPI.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartDetailsId");
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CartHeaderId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("CartDetails");
                 });
 
             modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.CartHeader", b =>
                 {
-                    b.Property<int>("CartHeaderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartHeaderId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CouponCode")
                         .IsRequired()
@@ -66,41 +67,12 @@ namespace Inveon.Services.ShoppingCartAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CartHeaderId");
+                    b.HasKey("Id");
 
                     b.ToTable("CartHeaders");
                 });
 
-            modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.CartDetails", b =>
+            modelBuilder.Entity("Inveon.Services.ShoppingCartAPI.Models.CartDetail", b =>
                 {
                     b.HasOne("Inveon.Services.ShoppingCartAPI.Models.CartHeader", "CartHeader")
                         .WithMany()
@@ -108,15 +80,7 @@ namespace Inveon.Services.ShoppingCartAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Inveon.Services.ShoppingCartAPI.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CartHeader");
-
-                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

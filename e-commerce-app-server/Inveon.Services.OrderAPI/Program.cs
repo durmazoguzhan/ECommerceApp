@@ -1,4 +1,5 @@
 using Inveon.Services.OrderAPI.DbContexts;
+using Inveon.Services.OrderAPI.Messages;
 using Inveon.Services.OrderAPI.Messaging;
 using Inveon.Services.OrderAPI.RabbitMQSender;
 using Inveon.Services.OrderAPI.Repository;
@@ -8,26 +9,23 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-//IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-//services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
-var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddHttpClient<IProductRepository, ProductRepository>(u => u.BaseAddress =
+  new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
 
 builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
 builder.Services.AddHostedService<RabbitMQCheckoutConsumer>();
+
+var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options));
 
 builder.Services.AddSingleton<IRabbitMQOrderMessageSender, RabbitMQOrderMessageSender>();
@@ -56,7 +54,7 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Inveon.Services.CouponAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Inveon.Services.OrderAPI", Version = "v1" });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"Enter 'Bearer' [space] and your token",
@@ -66,23 +64,24 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            },
-                            Scheme="oauth2",
-                            Name="Bearer",
-                            In=ParameterLocation.Header
-                        },
-                        new List<string>()
-                    }
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                },
+                Scheme="oauth2",
+                Name="Bearer",
+                In=ParameterLocation.Header
+            },
+            new List<string>()
+        }
 
-                });
+    });
 });
 
 var app = builder.Build();
@@ -96,8 +95,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inveon.Services.OrderAPI v1"));
 }
-
-
 
 app.UseHttpsRedirection();
 

@@ -1,8 +1,11 @@
-﻿namespace Inveon.Services.OrderAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Inveon.Services.OrderAPI.Models
 {
     public class OrderHeader
     {
-        public int OrderHeaderId { get; set; }
+        [Key]
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string CouponCode { get; set; }
         public double OrderTotal { get; set; }
@@ -16,10 +19,9 @@
         public string CardNumber { get; set; }
         public string CVV { get; set; }
         public string ExpiryMonth { get; set; }
-
         public string ExpiryYear { get; set; }
         public int CartTotalItems { get; set; }
-        public List<OrderDetails> OrderDetails { get; set; }
+        public List<OrderDetail> OrderDetails { get; set; }
         public bool PaymentStatus { get; set; }
     }
 }

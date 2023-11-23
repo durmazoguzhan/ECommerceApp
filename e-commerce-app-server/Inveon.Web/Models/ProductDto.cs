@@ -13,7 +13,6 @@
         public int CategoryId { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsActive { get; set; }
-
         public int Count { get; set; }
         public string? Size { get; set; }
     }
