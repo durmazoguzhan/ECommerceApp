@@ -1,3 +1,5 @@
+using AutoMapper;
+using Inveon.Services.OrderAPI;
 using Inveon.Services.OrderAPI.DbContexts;
 using Inveon.Services.OrderAPI.Messages;
 using Inveon.Services.OrderAPI.Messaging;
@@ -15,9 +17,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddHttpClient<IProductRepository, ProductRepository>(u => u.BaseAddress =
   new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
 
@@ -26,7 +32,7 @@ builder.Services.AddHostedService<RabbitMQCheckoutConsumer>();
 
 var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options));
+builder.Services.AddSingleton(new OrderConsumeRepository(optionBuilder.Options));
 
 builder.Services.AddSingleton<IRabbitMQOrderMessageSender, RabbitMQOrderMessageSender>();
 builder.Services.AddControllers();

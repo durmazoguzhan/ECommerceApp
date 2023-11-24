@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Inveon.Services.OrderAPI.Models.DTOs;
+using Newtonsoft.Json;
 
 namespace Inveon.Services.OrderAPI.Messages
 {

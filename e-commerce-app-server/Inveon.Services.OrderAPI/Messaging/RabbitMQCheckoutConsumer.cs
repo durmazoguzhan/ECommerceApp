@@ -6,20 +6,21 @@ using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 using System.Text;
 using Newtonsoft.Json;
+using Inveon.Services.OrderAPI.Models.DTOs;
 
 namespace Inveon.Services.OrderAPI.Messaging
 {
     public class RabbitMQCheckoutConsumer : BackgroundService
     {
-        private readonly OrderRepository _orderRepository;
+        private readonly OrderConsumeRepository _orderConsumeRepository;
         private readonly IProductRepository _productRepository;
         private IConnection _connection;
         private IModel _channel;
         private readonly IRabbitMQOrderMessageSender _rabbitMQOrderMessageSender;
 
-        public RabbitMQCheckoutConsumer(OrderRepository orderRepository, IProductRepository productRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
+        public RabbitMQCheckoutConsumer(OrderConsumeRepository orderConsumeRepository, IProductRepository productRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
         {
-            _orderRepository = orderRepository;
+            _orderConsumeRepository = orderConsumeRepository;
             _productRepository = productRepository;
             _rabbitMQOrderMessageSender = rabbitMQOrderMessageSender;
 
@@ -88,7 +89,7 @@ namespace Inveon.Services.OrderAPI.Messaging
                 orderHeader.OrderDetails.Add(orderDetails);
             }
 
-            await _orderRepository.AddOrder(orderHeader);
+            await _orderConsumeRepository.AddOrder(orderHeader);
 
             PaymentRequestMessage paymentRequestMessage = new()
             {

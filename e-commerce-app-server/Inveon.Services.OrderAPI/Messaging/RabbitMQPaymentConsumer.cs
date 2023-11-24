@@ -9,17 +9,15 @@ namespace Inveon.Services.OrderAPI.Messaging
 {
     public class RabbitMQPaymentConsumer : BackgroundService
     {
-
         private IConnection _connection;
         private IModel _channel;
         private const string ExchangeName = "DirectPaymentUpdate_Exchange";
         private const string PaymentOrderUpdateQueueName = "PaymentOrderUpdateQueueName";
+        private readonly OrderConsumeRepository _orderConsumeRepository;
 
-        private readonly OrderRepository _orderRepository;
-        string queueName = "";
-        public RabbitMQPaymentConsumer(OrderRepository orderRepository)
+        public RabbitMQPaymentConsumer(OrderConsumeRepository orderConsumeRepository)
         {
-            _orderRepository = orderRepository;
+            _orderConsumeRepository = orderConsumeRepository;
             var factory = new ConnectionFactory
             {
                 HostName = "localhost",
@@ -33,6 +31,7 @@ namespace Inveon.Services.OrderAPI.Messaging
             _channel.QueueDeclare(PaymentOrderUpdateQueueName, false, false, false, null);
             _channel.QueueBind(PaymentOrderUpdateQueueName, ExchangeName, "PaymentOrder");
         }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
@@ -55,7 +54,7 @@ namespace Inveon.Services.OrderAPI.Messaging
         {
             try
             {
-                await _orderRepository.UpdateOrderPaymentStatus(updatePaymentResultMessage.OrderId,
+                await _orderConsumeRepository.UpdateOrderPaymentStatus(updatePaymentResultMessage.OrderId,
                     updatePaymentResultMessage.Status);
             }
             catch (Exception e)

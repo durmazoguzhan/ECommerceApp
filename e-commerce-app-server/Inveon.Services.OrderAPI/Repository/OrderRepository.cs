@@ -1,39 +1,60 @@
-﻿using Inveon.Services.OrderAPI.DbContexts;
+﻿using AutoMapper;
+using Inveon.Services.OrderAPI.DbContexts;
 using Inveon.Services.OrderAPI.Models;
+using Inveon.Services.OrderAPI.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inveon.Services.OrderAPI.Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly DbContextOptions<ApplicationDbContext> _dbContext;
+        private readonly ApplicationDbContext _db;
+        private IMapper _mapper;
 
-        public OrderRepository(DbContextOptions<ApplicationDbContext> dbContext)
+        public OrderRepository(ApplicationDbContext db, IMapper mapper)
         {
-            _dbContext = dbContext;
+            _db = db;
+            _mapper = mapper;
         }
 
-        public async Task<bool> AddOrder(OrderHeader orderHeader)
+        async Task<OrderDto> IOrderRepository.CreateUpdateOrder(OrderDto orderDto)
         {
-            if (orderHeader.CouponCode == null)
-            {
-                orderHeader.CouponCode = "";
-            }
-            await using var _db = new ApplicationDbContext(_dbContext);
-            _db.OrderHeaders.Add(orderHeader);
+            OrderHeader order = _mapper.Map<OrderDto, OrderHeader>(orderDto);
+            if (order.Id > 0)
+                _db.OrderHeaders.Update(order);
+            else
+                _db.OrderHeaders.Add(order);
             await _db.SaveChangesAsync();
-            return true;
+            return _mapper.Map<OrderHeader, OrderDto>(order);
         }
 
-        public async Task UpdateOrderPaymentStatus(int orderHeaderId, bool paid)
+        async Task<bool> IOrderRepository.DeleteOrder(int orderId)
         {
-            await using var _db = new ApplicationDbContext(_dbContext);
-            var orderHeaderFromDb = await _db.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
-            if (orderHeaderFromDb != null)
+            try
             {
-                orderHeaderFromDb.PaymentStatus = paid;
-                await _db.SaveChangesAsync();
+                OrderHeader order = await _db.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderId);
+                if (order == null)
+                    return false;
+                else
+                {
+                    _db.OrderHeaders.Remove(order);
+                    await _db.SaveChangesAsync();
+                    return true;
+                }
             }
+            catch (Exception) { return false; }
+        }
+
+        async Task<OrderDto> IOrderRepository.GetOrderById(int orderId)
+        {
+            OrderHeader order = await _db.OrderHeaders.Where(x => x.Id == orderId).FirstOrDefaultAsync();
+            return _mapper.Map<OrderDto>(order);
+        }
+
+        async Task<IEnumerable<OrderDto>> IOrderRepository.GetOrders()
+        {
+            List<OrderHeader> orderList = await _db.OrderHeaders.ToListAsync();
+            return _mapper.Map<List<OrderDto>>(orderList);
         }
     }
 }

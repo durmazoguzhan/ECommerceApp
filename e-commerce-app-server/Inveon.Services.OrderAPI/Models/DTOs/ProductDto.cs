@@ -1,4 +1,4 @@
-﻿namespace Inveon.Services.OrderAPI.Messages
+﻿namespace Inveon.Services.OrderAPI.Models.DTOs
 {
     public class ProductDto
     {
