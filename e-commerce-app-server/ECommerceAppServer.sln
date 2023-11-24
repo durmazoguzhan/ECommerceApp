@@ -29,9 +29,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inveon.MailSender", "Inveon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inveon.Services.OrderAPI", "Inveon.Services.OrderAPI\Inveon.Services.OrderAPI.csproj", "{CD794965-89BB-4D10-83E8-7B4CC4B04E4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inveon.Services.BrandAPI", "Inveon.Services.BrandAPI\Inveon.Services.BrandAPI.csproj", "{5FD733AA-9F07-4571-B896-2994EFBC08EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inveon.Services.BrandAPI", "Inveon.Services.BrandAPI\Inveon.Services.BrandAPI.csproj", "{5FD733AA-9F07-4571-B896-2994EFBC08EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inveon.Services.CategoryAPI", "Inveon.Services.CategoryAPI\Inveon.Services.CategoryAPI.csproj", "{C3FF3793-0702-4566-A770-B9719925FAA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inveon.Services.CategoryAPI", "Inveon.Services.CategoryAPI\Inveon.Services.CategoryAPI.csproj", "{C3FF3793-0702-4566-A770-B9719925FAA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inveon.Services.EmailAPI", "Inveon.Services.EmailAPI\Inveon.Services.EmailAPI.csproj", "{8A89B245-0097-49BF-B813-EC3F295A9CE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inveon.Services.FavoriteAPI", "Inveon.Services.FavoriteAPI\Inveon.Services.FavoriteAPI.csproj", "{076D1400-FDEE-476E-A9F9-44CAE21825AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +87,14 @@ Global
 		{C3FF3793-0702-4566-A770-B9719925FAA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3FF3793-0702-4566-A770-B9719925FAA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3FF3793-0702-4566-A770-B9719925FAA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A89B245-0097-49BF-B813-EC3F295A9CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A89B245-0097-49BF-B813-EC3F295A9CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A89B245-0097-49BF-B813-EC3F295A9CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A89B245-0097-49BF-B813-EC3F295A9CE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{076D1400-FDEE-476E-A9F9-44CAE21825AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{076D1400-FDEE-476E-A9F9-44CAE21825AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{076D1400-FDEE-476E-A9F9-44CAE21825AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{076D1400-FDEE-476E-A9F9-44CAE21825AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +111,8 @@ Global
 		{CD794965-89BB-4D10-83E8-7B4CC4B04E4D} = {E4E07C20-0933-4FF9-A2AA-4D8E0391C343}
 		{5FD733AA-9F07-4571-B896-2994EFBC08EC} = {E4E07C20-0933-4FF9-A2AA-4D8E0391C343}
 		{C3FF3793-0702-4566-A770-B9719925FAA5} = {E4E07C20-0933-4FF9-A2AA-4D8E0391C343}
+		{8A89B245-0097-49BF-B813-EC3F295A9CE2} = {E4E07C20-0933-4FF9-A2AA-4D8E0391C343}
+		{076D1400-FDEE-476E-A9F9-44CAE21825AA} = {E4E07C20-0933-4FF9-A2AA-4D8E0391C343}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1BB8EFE-6F5E-489F-B110-AC456E697A63}

@@ -1,52 +1,34 @@
 using AutoMapper;
-using Inveon.Services.OrderAPI;
-using Inveon.Services.OrderAPI.DbContexts;
-using Inveon.Services.OrderAPI.Messages;
-using Inveon.Services.OrderAPI.Messaging;
-using Inveon.Services.OrderAPI.RabbitMQSender;
-using Inveon.Services.OrderAPI.Repository;
+using Inveon.Services.FavoriteAPI;
+using Inveon.Services.FavoriteAPI.DbContexts;
+using Inveon.Services.FavoriteAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
-builder.Services.AddHttpClient<IProductRepository, ProductRepository>(u => u.BaseAddress =
-  new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
-
-builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
-builder.Services.AddHostedService<RabbitMQCheckoutConsumer>();
-
-var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-builder.Services.AddSingleton(new OrderConsumeRepository(optionBuilder.Options));
-
-builder.Services.AddSingleton<IRabbitMQOrderMessageSender, RabbitMQOrderMessageSender>();
-builder.Services.AddControllers();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-
         options.Authority = "https://localhost:44365/";
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = false
         };
-
     });
 
 builder.Services.AddAuthorization(options =>
@@ -60,7 +42,8 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Inveon.Services.OrderAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Inveon.Services.FavoriteAPI", Version = "v1" });
+    c.EnableAnnotations();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"Enter 'Bearer' [space] and your token",
@@ -69,7 +52,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -77,16 +59,15 @@ builder.Services.AddSwaggerGen(c =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 },
-                Scheme="oauth2",
-                Name="Bearer",
-                In=ParameterLocation.Header
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
             },
             new List<string>()
         }
-
     });
 });
 
@@ -96,17 +77,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inveon.Services.OrderAPI v1"));
 }
 
 app.UseHttpsRedirection();
-
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

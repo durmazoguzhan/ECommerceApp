@@ -123,8 +123,8 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost("Checkout2")]
-        public async Task<object> Checkout2(CartDto cartDto)
+        [HttpPost("Checkout")]
+        public async Task<object> Checkout(CartDto cartDto)
         {
             try
             {

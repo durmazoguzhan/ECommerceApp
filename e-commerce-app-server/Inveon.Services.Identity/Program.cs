@@ -52,11 +52,9 @@ using (var serviceScope = app.Services.CreateScope())
     var service = serviceScope.ServiceProvider.GetService<IDbInitializer>();
     service.Initialize();
 }
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
+
+app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-});
 
 app.Run();

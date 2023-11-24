@@ -20,11 +20,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddSingleton<IRabbitMQCartMessageSender, RabbitMQCartMessageSender>();
-builder.Services.AddControllers();
+
 builder.Services.AddHttpClient<ICouponRepository, CouponRepository>(u => u.BaseAddress =
   new Uri(builder.Configuration["ServiceUrls:CouponAPI"]));
 builder.Services.AddHttpClient<IProductRepository, ProductRepository>(u => u.BaseAddress =

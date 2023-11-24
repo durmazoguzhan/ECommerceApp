@@ -144,13 +144,13 @@ namespace Inveon.Web.Areas.Customer.Controllers
 
                 return RedirectToAction(nameof(Confirmation));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(cartDto);
             }
         }
 
-        public async Task<IActionResult> Confirmation()
+        public IActionResult Confirmation()
         {
             return View();
         }

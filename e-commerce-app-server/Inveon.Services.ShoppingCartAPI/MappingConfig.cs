@@ -4,7 +4,7 @@ using Inveon.Services.ShoppingCartAPI.Models.Dto;
 
 namespace Inveon.Services.ShoppingCartAPI
 {
-    public class MappingConfig
+    public class MappingConfig : Profile
     {
         public static MapperConfiguration RegisterMaps()
         {
