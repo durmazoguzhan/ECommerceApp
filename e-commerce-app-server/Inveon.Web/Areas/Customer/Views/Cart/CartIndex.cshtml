@@ -22,14 +22,17 @@
                         <div class="row text-info">
                             <div class="col-lg-2">
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-4">
                                 Product Details
                             </div>
                             <div class="col-lg-2">
                                 Price
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-1">
                                 Count
+                            </div>
+                            <div class="col-lg-1">
+                                Size
                             </div>
                             <div class="col-lg-1">
                             </div>
@@ -43,15 +46,18 @@
                             <div class="col-4 col-md-2 text-center py-2">
                                 <img src="~/Uploads/@product.Images.Split(',')[0]" class="rounded" width="100%" />
                             </div>
-                            <div class="col-8 col-md-5">
+                            <div class="col-8 col-md-4">
                                 <h5>@product.Name</h5>
                                 <div style="font-size:11px;">@Html.Raw(product.Description)</div>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@string.Format("{0:c}",product.SalePrice) </span>
+                                <span style="font-size:17px;">@string.Format("{0:c}", product.SalePrice) </span>
                             </div>
-                            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Count</span>
+                            <div class="col-3 col-md-1 pt-md-4" style="font-size:11px;">
+                                <span style="font-size:17px;">@Model.CartDetails.Where(p => p.ProductId == product.Id).First().Count</span>
+                            </div>
+                            <div class="col-3 col-md-1 pt-md-4" style="font-size:11px;">
+                                <span style="font-size:17px;">@Model.CartDetails.Where(p => p.ProductId == product.Id).First().Size</span>
                             </div>
                             <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
                                 <a asp-action="Remove" asp-route-cartDetailsId="@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Id" class="btn btn-outline-danger">

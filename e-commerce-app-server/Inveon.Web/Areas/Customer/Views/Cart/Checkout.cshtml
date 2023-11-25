@@ -55,13 +55,13 @@
                             <input asp-for="CartHeader.CVV" class="form-control" />
                         </div>
 
-                        <div class="col-12 pb-4">
-                            <label class="col-form-label">Expiry Mont:</label>
+                        <div class="col-12">
+                            <label class="col-form-label">Expiry Month:</label>
                             <input asp-for="CartHeader.ExpiryMonth" placeholder="MM" class="form-control" />
                         </div>
 
                         <div class="col-12 pb-4">
-                            <label class="col-form-label">Expiry :</label>
+                            <label class="col-form-label">Expiry Year:</label>
                             <input asp-for="CartHeader.ExpiryYear" placeholder="YYYY" class="form-control" />
                         </div>
                     </div>
@@ -74,12 +74,14 @@
                                     <div class="col-6">
                                         Product Details
                                     </div>
-
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         Price
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         Count
+                                    </div>
+                                    <div class="col-2">
+                                        Size
                                     </div>
                                 </div>
                             </div>
@@ -93,12 +95,15 @@
                                         <span style="font-size:20px">@product.Name</span>
                                     </div>
 
-                                    <div class="col-3" style="font-size:11px;">
+                                    <div class="col-2" style="font-size:11px;">
                                         <span style="font-size:17px;">@product.SalePrice TL</span>
 
                                     </div>
-                                    <div class="col-3" style="font-size:11px;">
+                                    <div class="col-2" style="font-size:11px;">
                                         <span style="font-size:17px;">@Model.CartDetails.Where(p=>p.ProductId==product.Id).First().Count</span>
+                                    </div>
+                                    <div class="col-2" style="font-size:11px;">
+                                        <span style="font-size:17px;">@Model.CartDetails.Where(p => p.ProductId == product.Id).First().Size</span>
                                     </div>
                                 </div>
                                 <hr />

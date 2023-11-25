@@ -25,7 +25,11 @@ namespace Inveon.Services.OrderAPI.RabbitMQSender
             {
                 using var channel = _connection.CreateModel();
                 channel.QueueDeclare(queue: queueName, false, false, false, arguments: null);
-                var json = JsonConvert.SerializeObject(message);
+                var json = JsonConvert.SerializeObject(message,Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                    });
                 var body = Encoding.UTF8.GetBytes(json);
                 channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
             }
@@ -43,10 +47,7 @@ namespace Inveon.Services.OrderAPI.RabbitMQSender
                 };
                 _connection = factory.CreateConnection();
             }
-            catch (Exception)
-            {
-                //log exception
-            }
+            catch (Exception) { }
         }
 
         private bool ConnectionExists()

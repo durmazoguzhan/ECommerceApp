@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Inveon.MailSender\Inveon.MailSender.csproj" />
     <ProjectReference Include="..\Inveon.MessageBus\Inveon.MessageBus.csproj" />
   </ItemGroup>
 

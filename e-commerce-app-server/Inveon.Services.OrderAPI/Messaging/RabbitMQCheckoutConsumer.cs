@@ -7,6 +7,7 @@ using RabbitMQ.Client;
 using System.Text;
 using Newtonsoft.Json;
 using Inveon.Services.OrderAPI.Models.DTOs;
+using AutoMapper;
 
 namespace Inveon.Services.OrderAPI.Messaging
 {
@@ -14,15 +15,17 @@ namespace Inveon.Services.OrderAPI.Messaging
     {
         private readonly OrderConsumeRepository _orderConsumeRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
         private IConnection _connection;
         private IModel _channel;
         private readonly IRabbitMQOrderMessageSender _rabbitMQOrderMessageSender;
 
-        public RabbitMQCheckoutConsumer(OrderConsumeRepository orderConsumeRepository, IProductRepository productRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
+        public RabbitMQCheckoutConsumer(OrderConsumeRepository orderConsumeRepository, IProductRepository productRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender,IMapper mapper)
         {
             _orderConsumeRepository = orderConsumeRepository;
             _productRepository = productRepository;
             _rabbitMQOrderMessageSender = rabbitMQOrderMessageSender;
+            _mapper = mapper;
 
             var factory = new ConnectionFactory
             {
@@ -90,6 +93,7 @@ namespace Inveon.Services.OrderAPI.Messaging
             }
 
             await _orderConsumeRepository.AddOrder(orderHeader);
+            _rabbitMQOrderMessageSender.SendMessage(_mapper.Map<OrderHeaderDto>(orderHeader), "emailqueue");
 
             PaymentRequestMessage paymentRequestMessage = new()
             {
@@ -107,10 +111,7 @@ namespace Inveon.Services.OrderAPI.Messaging
             {
                 _rabbitMQOrderMessageSender.SendMessage(paymentRequestMessage, "orderpaymentprocesstopic");
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            catch (Exception) { }
         }
     }
 }

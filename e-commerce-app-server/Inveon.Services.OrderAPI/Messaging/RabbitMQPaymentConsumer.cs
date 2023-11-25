@@ -57,10 +57,7 @@ namespace Inveon.Services.OrderAPI.Messaging
                 await _orderConsumeRepository.UpdateOrderPaymentStatus(updatePaymentResultMessage.OrderId,
                     updatePaymentResultMessage.Status);
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            catch (Exception) { throw; }
         }
     }
 }

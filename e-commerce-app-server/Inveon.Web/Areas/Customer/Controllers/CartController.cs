@@ -45,7 +45,7 @@ namespace Inveon.Web.Areas.Customer.Controllers
                 if (!string.IsNullOrEmpty(cartDto.CartHeader.CouponCode))
                 {
                     var coupon = await _couponService.GetCoupon<ResponseDto>(cartDto.CartHeader.CouponCode, accessToken);
-                    if (coupon != null && coupon.IsSuccess)
+                    if (coupon != null && coupon.IsSuccess && coupon.Result != null)
                     {
                         var couponObj = JsonConvert.DeserializeObject<CouponDto>(Convert.ToString(coupon.Result));
                         cartDto.CartHeader.DiscountTotal = couponObj.DiscountAmount;

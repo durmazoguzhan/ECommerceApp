@@ -11,6 +11,8 @@ namespace Inveon.Services.OrderAPI
             var mappingConfig = new MapperConfiguration(config =>
             {
                 config.CreateMap<OrderDto, OrderHeader>().ReverseMap();
+                config.CreateMap<OrderHeaderDto, OrderHeader>().ReverseMap();
+                config.CreateMap<OrderDetailDto, OrderDetail>().ReverseMap();
             });
 
             return mappingConfig;
