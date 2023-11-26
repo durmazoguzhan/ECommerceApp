@@ -52,8 +52,6 @@ const ProductInfo = () => {
                     <div className="product_details_tabs">
                         <ul className="nav nav-tabs">
                             <li><a data-toggle="tab" href="#description" className="active">Açıklama</a></li>
-                            <li><a data-toggle="tab" href="#additional">Ek Bilgiler</a></li>
-                            <li><a data-toggle="tab" href="#review">Yorumlar</a></li>
                         </ul>
                         <div className="tab-content">
                             <div id="description" className="tab-pane fade in show active">

@@ -16,27 +16,12 @@ const HotProduct = () => {
                 <ul className="nav nav-tabs">
                   <li>
                     <a data-toggle="tab" href="#new_arrival" className="active">
-                      YENİ GELEN ÜRÜNLER
-                    </a>
-                  </li>
-                  <li>
-                    <a data-toggle="tab" href="#trending">
-                      Trend
+                      YENİ GELENLER
                     </a>
                   </li>
                   <li>
                     <a data-toggle="tab" href="#best_sellers">
-                      En Çok Satanlar
-                    </a>
-                  </li>
-                  <li>
-                    <a data-toggle="tab" href="#featured">
-                      Öne Çıkanlar
-                    </a>
-                  </li>
-                  <li>
-                    <a data-toggle="tab" href="#on_sall">
-                      Satışta
+                      Çok Satanlar
                     </a>
                   </li>
                 </ul>

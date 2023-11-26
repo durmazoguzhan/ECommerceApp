@@ -44,20 +44,6 @@ const AccountDetails = () => {
                                 <input type="date" name="birthday" defaultValue="2017-06-01"
                                     className="form-control" readOnly />
                             </div>
-                            <span className="example">
-                                ( 05/12/1970)
-                            </span>
-                            <br />
-                            <label className="checkbox-default" htmlFor="offer">
-                                <input type="checkbox" id="offer" />
-                                <span className="ml-2">Ortaklarımızdan teklif alın</span>
-                            </label>
-                            <br />
-                            <label className="checkbox-default checkbox-default-more-text" htmlFor="newsletter">
-                                <input type="checkbox" id="newsletter" />
-                                <span className="ml-2">Bültenimize kaydolun</span>
-                                <p className="mt-2">Herhangi bir zamanda abonelikten çıkabilirsiniz!</p>
-                            </label>
                         </form>
                     </div>
                 </div>

@@ -21,11 +21,6 @@ const TotalCart = (props) => {
                                 <p>Alt Toplam : </p>
                                 <p className="cart_amount">${cartTotal()}.00</p>
                             </div>
-                            <div className="cart_subtotal ">
-                                <p>Kargo</p>
-                                <p className="cart_amount"><span>Sabit Fiyat</span> 00 TL</p>
-                            </div>
-                            <a href="#!">Kargo Hesapla</a>
 
                             <div className="cart_subtotal">
                                 <p>Toplam</p>
@@ -49,11 +44,6 @@ const TotalCart = (props) => {
                                 <p>Alt Toplam : </p>
                                 <p className="cart_amount">{cartTotal()}.00 TL</p>
                             </div>
-                            <div className="cart_subtotal ">
-                                <p>Kargo</p>
-                                <p className="cart_amount"><span>Sabit Fiyat</span> 00 TL</p>
-                            </div>
-                            <a href="#!">Kargo Hesapla</a>
 
                             <div className="cart_subtotal">
                                 <p>Toplam</p>

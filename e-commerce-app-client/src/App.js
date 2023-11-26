@@ -57,6 +57,7 @@ function App() {
           <Route path="/my-account/customer-address" element={<CustomerAddress />} />
           <Route path="/my-account/customer-account-details" element={<CustomerAccountDetails />} />
           <Route path="/shop/shop-left-sidebar" element={<ShopLeftSideBar />} />
+          <Route path="/shop" element={<ShopLeftSideBar />} />
         </Routes>
       </BrowserRouter>
     </div>

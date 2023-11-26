@@ -12,7 +12,6 @@ const FooterData = [
     links: [
       { linkTitle: "Anasayfa", link: "/" },
       { linkTitle: "Hakkımızda", link: "/about" },
-      { linkTitle: "Sipariş Takibi", link: "/order-tracking" },
     ],
   },
 ];

@@ -1,15 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-//NaveItems constructor ına parametre gönderiyorum
-//NaveItems const componeninden bir nesne oluştulduğunda props ile buna veri gönderimi yapılıyor
-
-const NaveItems = (props) => {
+export const NaveItems = (props) => {
   return (
     <>
       {
-        <li className="has-drowdown">
-          {/* Menü Ana Başlıkları*/}
+        <li>
           <a href="#!" className="main-menu-link">
             {props.item.name}
             <i className="fa fa-angle-down"></i>

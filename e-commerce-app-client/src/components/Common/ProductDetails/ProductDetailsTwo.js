@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from 'react-router-dom';
-import { RatingStar } from "rating-star";
 
 const ProductDetailsTwo = () => {
     let dispatch = useDispatch();
@@ -93,10 +92,6 @@ const ProductDetailsTwo = () => {
                             <div className="product_details_right_one">
                                 <div className="modal_product_content_one">
                                     <h3>{product.title}</h3>
-                                    <div className="reviews_rating">
-                                        <RatingStar maxScore={5} rating={product.rating.rate} id="rating-star-common-2" />
-                                        <span>({product.rating.count} Müşteri Yorumları)</span>
-                                    </div>
                                     <h4>{product.price}.00 TL <del>{parseInt(product.price) + 17}.00 TL</del> </h4>
                                     <p>{product.description}</p>
                                     <div className="customs_selects">
@@ -107,26 +102,6 @@ const ProductDetailsTwo = () => {
                                             <option value="learz">L</option>
                                             <option value="xl">XL</option>
                                         </select>
-                                    </div>
-                                    <div className="variable-single-item">
-                                        <span>Renk</span>
-                                        <div className="product-variable-color">
-                                            <label htmlFor="modal-product-color-red1">
-                                                <input name="modal-product-color" id="modal-product-color-red1"
-                                                    className="color-select" type="radio" onChange={() => { colorSwatch('red') }} defaultChecked/>
-                                                <span className="product-color-red"></span>
-                                            </label>
-                                            <label htmlFor="modal-product-color-green3">
-                                                <input name="modal-product-color" id="modal-product-color-green3"
-                                                    className="color-select" type="radio" onChange={() => { colorSwatch('green') }} />
-                                                <span className="product-color-green"></span>
-                                            </label>
-                                            <label htmlFor="modal-product-color-blue5">
-                                                <input name="modal-product-color" id="modal-product-color-blue5"
-                                                    className="color-select" type="radio" onChange={() => { colorSwatch('blue') }} />
-                                                <span className="product-color-blue"></span>
-                                            </label>
-                                        </div>
                                     </div>
                                     <form id="product_count_form_two">
                                         <div className="product_count_one">
