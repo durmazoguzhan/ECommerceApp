@@ -13,17 +13,17 @@
 }
 
 .txt-alt-primary-clr{
-  color: var(--alternate-primary-color)!important;
+  color: var(--alt-primary-color)!important;
 }
 .bg-alt-primary-clr{
-  background-color: var(--alternate-primary-color)!important;
+  background-color: var(--alt-primary-color)!important;
 }
 
 .txt-alt-secondary-clr{
-  color: var(--alternate-secondary-color)!important;
+  color: var(--alt-secondary-color)!important;
 }
 .bg-alt-secondary-clr{
-  background-color: var(--alternate-secondary-color)!important;
+  background-color: var(--alt-secondary-color)!important;
 }
 
 .txt-black-clr{

@@ -2,10 +2,18 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
+import { IKImage } from "imagekitio-react";
+import { getBrand } from "../../../app/slices/brand";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
-//Her bir ürünü temsil edecek
 const ProductCard = (props) => {
-  let dispatch = useDispatch();
+  const brand = useSelector((state) => state.brands.brand[props.data.brandId]);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getBrand({ id: props.data.brandId }));
+  }, [dispatch, props.data.brandId]);
 
   const sepeteEkle = async (id) => {
     console.log("tıklandı");
@@ -16,17 +24,17 @@ const ProductCard = (props) => {
     console.log("tıklandı");
     dispatch({ type: "products/addToFavorites", payload: { id } });
   };
+
   return (
     <>
       <div className="product_wrappers_one">
         <div className="thumb">
           <Link to={`/product-details-two/${props.data.id}`} className="image">
-            <img src={props.data.img} alt={props.data.title}></img>
-            <img className="hover-image" src={props.data.hover_img} alt={props.data.title} />
+            <IKImage path={`/ProductImages/${props.data.images.split(",")[0]}`} />
           </Link>
           <span className="badges">
-            <span>{props.data.labels}</span>
-            <span>{props.data.labels}</span>
+            {props.data.salePrice > 500 && <span>Kargo Bedava</span>}
+            {props.data.salePrice < props.data.listPrice && <span className="bg-primary-clr">İndirim</span>}
           </span>
           <div className="actions">
             <a
@@ -48,10 +56,11 @@ const ProductCard = (props) => {
         </div>
         <div className="content">
           <h5 className="title">
-            <Link to={`/product-details-two/${props.data.id}`}>{props.data.title}</Link>
+            {brand &&<span className="txt-alt-primary-clr">{brand.name}</span>}
+            <Link to={`/product-details-two/${props.data.id}`}>{props.data.name}</Link>
           </h5>
           <span className="price">
-            <span className="new">{props.data.price}.00 TL</span>
+            <span className="new">{props.data.salePrice.toFixed(2)} TL</span>
           </span>
         </div>
       </div>

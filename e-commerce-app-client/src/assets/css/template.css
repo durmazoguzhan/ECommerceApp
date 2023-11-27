@@ -3722,6 +3722,19 @@ button {
        Shop Sidebar Page 
 -------------------------------------*/
 
+.custom_boxed_current_category{
+  display: block;
+  position: relative;
+  margin-bottom: 15px;
+  font-size: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
 .custom_boxed {
   display: block;
   position: relative;

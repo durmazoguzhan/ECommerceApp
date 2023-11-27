@@ -1,11 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ProductData } from "../data/ProductData";
 import Swal from "sweetalert2";
+import ProductService from "../services/ProductService";
 
-const productsSlice = createSlice({
+export const getAllProducts = createAsyncThunk(
+  "products/getAll",
+  async () => {
+    const res = await ProductService.getAll();
+    return res.data;
+  }
+);
+
+const productSlice = createSlice({
   name: "products",
   initialState: {
-    products: ProductData,
+    products: [],
     carts: ProductData.slice(2, 4),
     favorites: ProductData.slice(1, 4),
     single: null,
@@ -42,8 +51,8 @@ const productsSlice = createSlice({
     },
     removeCart: (state, action) => {
       let { id } = action.payload;
-      let sepetinOnSonHali = state.carts.filter((item) => item.id !== parseInt(id));
-      state.carts = sepetinOnSonHali;
+      let sepetinEnSonHali = state.carts.filter((item) => item.id !== parseInt(id));
+      state.carts = sepetinEnSonHali;
     },
     clearCart: (state) => {
       state.carts = [];
@@ -73,7 +82,13 @@ const productsSlice = createSlice({
       state.favorites = [];
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllProducts.fulfilled, (state, action) => {
+        state.products = action.payload.result;
+      })
+  },
 });
 
-const productsReducer = productsSlice.reducer;
-export default productsReducer;
+const productReducer = productSlice.reducer;
+export default productReducer;

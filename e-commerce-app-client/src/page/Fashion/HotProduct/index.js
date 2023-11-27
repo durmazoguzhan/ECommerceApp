@@ -2,8 +2,17 @@ import Heading from "../Heading";
 import React from "react";
 import { useSelector } from "react-redux";
 import ProductCard from "../../../components/Common/Product/ProductCard";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getAllProducts } from "../../../app/slices/product";
+
 const HotProduct = () => {
-  let TumUrunler = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.products.products);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
 
   return (
     <>
@@ -32,45 +41,18 @@ const HotProduct = () => {
                 <div className="tab-content">
                   <div id="new_arrival" className="tab-pane fade show in active">
                     <div className="row">
-                      {TumUrunler.slice(0, 4).map((urun, index) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={index}>
-                          <ProductCard data={urun} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div id="trending" className="tab-pane fade">
-                    <div className="row">
-                      {TumUrunler.slice(3, 5).map((urun, index) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={index}>
-                          <ProductCard data={urun} />
+                      {products.slice(0, 4).map((product) => (
+                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={product.id}>
+                          <ProductCard data={product} />
                         </div>
                       ))}
                     </div>
                   </div>
                   <div id="best_sellers" className="tab-pane fade">
                     <div className="row">
-                      {TumUrunler.slice(4, 7).map((urun, index) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={index}>
-                          <ProductCard data={urun} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div id="featured" className="tab-pane fade">
-                    <div className="row">
-                      {TumUrunler.slice(5, 9).map((urun, index) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={index}>
-                          <ProductCard data={urun} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div id="on_sall" className="tab-pane fade">
-                    <div className="row">
-                      {TumUrunler.slice(2, 7).map((urun, index) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={index}>
-                          <ProductCard data={urun} />
+                      {products.slice(0, 4).map((product) => (
+                        <div className="col-lg-3 col-md-4 col-sm-6 col-12" key={product.id}>
+                          <ProductCard data={product} />
                         </div>
                       ))}
                     </div>

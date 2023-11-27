@@ -1,59 +1,38 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import Swal from "sweetalert2";
-import axios from "axios";
+import BrandService from "../services/BrandService";
 
-export const getBrands = createAsyncThunk("brands/getBrands", async () => {
-  const response = await axios.get("https://localhost:5050/api/brands");
-  return response.data;
-});
+export const getAllBrands = createAsyncThunk(
+  "brands/getAll",
+  async () => {
+    const res = await BrandService.getAll();
+    return res.data;
+  }
+);
 
-const brandsSlice = createSlice({
-  name: "brands",
+export const getBrand = createAsyncThunk(
+  "brands/get",
+  async ({ id }) => {
+    const res = await BrandService.get(id);
+    return res.data;
+  }
+);
+
+const brandSlice = createSlice({
+  name: "brand",
   initialState: {
     brands: [],
-    brand: null,
-    status: "idle"
-  },
-  reducers: {
-    getBrandById: (state, action) => {
-
-    },
-    createBrand: (state, action) => {
-      Swal.fire({
-        title: "Başarılı",
-        text: "Kategori oluşturuldu!",
-        icon: "success",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    },
-    updateBrand: (state, action) => {
-      Swal.fire({
-        title: "Başarılı",
-        text: "Kategori güncellendi!",
-        icon: "success",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    },
-    deleteBrand: (state, action) => {
-      Swal.fire({
-        title: "Başarılı",
-        text: "Kategori silindi!",
-        icon: "success",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    },
+    brand: {}
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getBrands.fulfilled, (state, action) => {
-        state.brands = action.payload;
-        state.status = "success";
-      });
+      .addCase(getAllBrands.fulfilled, (state, action) => {
+        state.brands = action.payload.result;
+      })
+      .addCase(getBrand.fulfilled, (state, action) => {
+        state.brand[action.payload.result.id] = action.payload.result;
+      })
   },
 });
 
-const brandsReducer = brandsSlice.reducer;
-export default brandsReducer;
+const brandReducer = brandSlice.reducer;
+export default brandReducer;
