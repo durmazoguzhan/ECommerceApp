@@ -56,7 +56,7 @@ const ProductCard = (props) => {
         </div>
         <div className="content">
           <h5 className="title">
-            {brand &&<span className="txt-alt-primary-clr">{brand.name}</span>}
+            {brand && <span className="txt-alt-primary-clr">{brand.name}</span>}
             <Link to={`/product-details-two/${props.data.id}`}>{props.data.name}</Link>
           </h5>
           <span className="price">

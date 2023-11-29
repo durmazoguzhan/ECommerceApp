@@ -162,14 +162,14 @@ const Footer = () => {
       <section id="copyright_one">
         <div className="container">
           <div className="row">
-            <div className="col-lg-6 col-md-6 col-sm-6 col-12">
+            <div className="col-lg-6 col-md-6 col-sm-12 col-12">
               <div className="copyright_left">
                 <h6>
                   © CopyRight 2023 <span>InveShop</span>
                 </h6>
               </div>
             </div>
-            <div className="col-lg-6 col-md-6 col-sm-6 col-12">
+            <div className="col-lg-6 col-md-6 col-sm-12 col-12">
               <div className="d-flex justify-content-end mt-2 gap-1 txt-white-clr">
                 <i className="fa-brands fa-cc-paypal fa-xl"></i>
                 <i className="fa-brands fa-cc-visa fa-xl"></i>

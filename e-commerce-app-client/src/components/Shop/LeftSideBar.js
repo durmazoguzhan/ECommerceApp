@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import SideBar from "./SideBar";
 import ProductCard from "../Common/Product/ProductCard";
 import { useSelector } from "react-redux";
-const LeftSideBar = () => {
-  const [products, setProducts] = useState(useSelector((state) => state.products.products));
-  const [page, setPage] = useState(1);
-  let allData = [...useSelector((state) => state.products.products)];
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getAllProducts } from "../../app/slices/product";
 
-  const randProduct = (page) => {
+const LeftSideBar = () => {
+  const products = useSelector((state) => state.products.products);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, [dispatch]);
+
+  const [page, setPage] = useState(1);
+
+  const changePage = (page) => {
     if (page) {
-      let data = allData.sort((a, b) => 0.5 - Math.random());
-      data = data.slice(0, 9);
-      setProducts(data);
       setPage(page);
     }
   };
@@ -21,12 +27,12 @@ const LeftSideBar = () => {
       <section id="shop_main_area" className="ptb-100">
         <div className="container">
           <div className="row">
-            <SideBar filterEvent={randProduct} />
+            <SideBar filterEvent={changePage} />
             <div className="col-lg-9">
               <div className="row">
-                {products.slice(0, 12).map((data, index) => (
-                  <div className="col-lg-4 col-md-4 col-sm-6 col-12" key={index}>
-                    <ProductCard data={data} />
+                {products.slice(0, 12).map((product) => (
+                  <div className="col-lg-4 col-md-4 col-sm-6 col-12" key={product.id}>
+                    <ProductCard data={product} />
                   </div>
                 ))}
                 <div className="col-lg-12">
@@ -34,7 +40,7 @@ const LeftSideBar = () => {
                     <li
                       className="page-item"
                       onClick={(e) => {
-                        randProduct(page > 1 ? page - 1 : 0);
+                        changePage(page > 1 ? page - 1 : 0);
                       }}
                     >
                       <a className="page-link" href="#!" aria-label="Previous">
@@ -44,7 +50,7 @@ const LeftSideBar = () => {
                     <li
                       className={"page-item " + (page === 1 ? "active" : null)}
                       onClick={(e) => {
-                        randProduct(1);
+                        changePage(1);
                       }}
                     >
                       <a className="page-link" href="#!">
@@ -54,7 +60,7 @@ const LeftSideBar = () => {
                     <li
                       className={"page-item " + (page === 2 ? "active" : null)}
                       onClick={(e) => {
-                        randProduct(2);
+                        changePage(2);
                       }}
                     >
                       <a className="page-link" href="#!">
@@ -64,7 +70,7 @@ const LeftSideBar = () => {
                     <li
                       className={"page-item " + (page === 3 ? "active" : null)}
                       onClick={(e) => {
-                        randProduct(3);
+                        changePage(3);
                       }}
                     >
                       <a className="page-link" href="#!">
@@ -74,7 +80,7 @@ const LeftSideBar = () => {
                     <li
                       className="page-item"
                       onClick={(e) => {
-                        randProduct(page < 3 ? page + 1 : 0);
+                        changePage(page < 3 ? page + 1 : 0);
                       }}
                     >
                       <a className="page-link" href="#!" aria-label="Next">

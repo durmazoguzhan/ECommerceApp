@@ -9,7 +9,6 @@ const userSlice = createSlice({
   reducers: {
     login: (state) => {
       state.status = true;
-      //rest api den gelen veriye göre değiştirebilir.
       state.user = {
         name: "ibrahim",
         role: "customer",

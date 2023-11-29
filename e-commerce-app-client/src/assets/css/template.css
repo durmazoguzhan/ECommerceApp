@@ -3585,7 +3585,7 @@ button {
 -------------------------------------*/
 
 .customs_sel_box {
-  width: 200px;
+  width: 21%;
   padding: 12px;
   font-size: 16px;
   line-height: 1;
@@ -3722,7 +3722,7 @@ button {
        Shop Sidebar Page 
 -------------------------------------*/
 
-.custom_boxed_current_category{
+.custom_boxed_current_category {
   display: block;
   position: relative;
   margin-bottom: 15px;
@@ -8860,4 +8860,14 @@ table {
 .product_detail_socials h6 {
   font-size: 16px;
   font-weight: 700;
+}
+
+.slick-prev {
+  left: 3% !important;
+  z-index: 1;
+}
+
+.slick-next {
+  right: 3% !important;
+  z-index: 1;
 }

@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   const cartTotal = () => {
-    return carts.reduce(function (total, item) {
+    return carts&&carts.reduce(function (total, item) {
       return total + (item.quantity || 1) * item.price;
     }, 0);
   };
@@ -108,7 +108,7 @@ const Header = () => {
                   </div>
                   <ul className="header-action-link action-color--black action-hover-color--golden">
                     <li>
-                      {favorites.length ? (
+                      {favorites && favorites.length ? (
                         <a href="#offcanvas-wishlish" className="offcanvas-toggle" onClick={handleWish}>
                           <i className="fa fa-heart"></i>
                           <span className="item-count">{favorites.length}</span>
@@ -116,12 +116,12 @@ const Header = () => {
                       ) : (
                         <a href="#offcanvas-wishlish" className="offcanvas-toggle">
                           <i className="fa fa-heart"></i>
-                          <span className="item-count">{favorites.length}</span>
+                          <span className="item-count">0</span>
                         </a>
                       )}
                     </li>
                     <li>
-                      {carts.length ? (
+                      {carts && carts.length ? (
                         <a href="#!" className="offcanvas-toggle" onClick={handleClick}>
                           <i className="fa fa-shopping-bag"></i>
                           <span className="item-count">{carts.length}</span>
@@ -129,7 +129,7 @@ const Header = () => {
                       ) : (
                         <a href="#!" className="offcanvas-toggle">
                           <i className="fa fa-shopping-bag"></i>
-                          <span className="item-count">{carts.length}</span>
+                          <span className="item-count">0</span>
                         </a>
                       )}
                     </li>
@@ -187,7 +187,7 @@ const Header = () => {
                     </a>
                   </li>
                   <li>
-                    {favorites.length ? (
+                    {favorites && favorites.length ? (
                       <a href="#offcanvas-wishlish" className="offcanvas-toggle" onClick={handleWish}>
                         <i className="fa fa-heart"></i>
                         <span className="item-count">{favorites.length}</span>
@@ -195,12 +195,12 @@ const Header = () => {
                     ) : (
                       <a href="#offcanvas-wishlish" className="offcanvas-toggle">
                         <i className="fa fa-heart"></i>
-                        <span className="item-count">{favorites.length}</span>
+                        <span className="item-count">0</span>
                       </a>
                     )}
                   </li>
                   <li>
-                    {carts.length ? (
+                    {carts && carts.length ? (
                       <a href="#!" className="offcanvas-toggle" onClick={handleClick}>
                         <i className="fa fa-shopping-bag"></i>
                         <span className="item-count">{carts.length}</span>
@@ -208,7 +208,7 @@ const Header = () => {
                     ) : (
                       <a href="#!" className="offcanvas-toggle">
                         <i className="fa fa-shopping-bag"></i>
-                        <span className="item-count">{carts.length}</span>
+                        <span className="item-count">0</span>
                       </a>
                     )}
                   </li>
@@ -339,33 +339,39 @@ const Header = () => {
         <div className="offcanvas-add-cart-wrapper">
           <h4 className="offcanvas-title">Alışveriş Sepeti</h4>
           <ul className="offcanvas-cart">
-            {carts.map((data, index) => (
-              <li className="offcanvas-wishlist-item-single" key={index}>
-                <div className="offcanvas-wishlist-item-block">
-                  <Link to={`/product-details-two/${data.id}`} className="offcanvas-wishlist-item-image-link">
-                    <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
-                  </Link>
-                  <div className="offcanvas-wishlist-item-content">
-                    <Link to={`/product-details-two/${data.id}`} className="offcanvas-wishlist-item-link">
-                      {data.title}
+            {carts &&
+              carts.map((data, index) => (
+                <li className="offcanvas-wishlist-item-single" key={index}>
+                  <div className="offcanvas-wishlist-item-block">
+                    <Link
+                      to={`/product-details-two/${data.id}`}
+                      className="offcanvas-wishlist-item-image-link"
+                    >
+                      <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
                     </Link>
-                    <div className="offcanvas-wishlist-item-details">
-                      <span className="offcanvas-wishlist-item-details-quantity">{data.quantity || 1} x</span>
-                      <span className="offcanvas-wishlist-item-details-price">{data.price} TL</span>
+                    <div className="offcanvas-wishlist-item-content">
+                      <Link to={`/product-details-two/${data.id}`} className="offcanvas-wishlist-item-link">
+                        {data.title}
+                      </Link>
+                      <div className="offcanvas-wishlist-item-details">
+                        <span className="offcanvas-wishlist-item-details-quantity">
+                          {data.quantity || 1} x
+                        </span>
+                        <span className="offcanvas-wishlist-item-details-price">{data.price} TL</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="offcanvas-wishlist-item-delete text-right">
-                  <a
-                    href="#!"
-                    className="offcanvas-wishlist-item-delete"
-                    onClick={() => rmCartProduct(data.id)}
-                  >
-                    <i className="fa fa-trash"></i>
-                  </a>
-                </div>
-              </li>
-            ))}
+                  <div className="offcanvas-wishlist-item-delete text-right">
+                    <a
+                      href="#!"
+                      className="offcanvas-wishlist-item-delete"
+                      onClick={() => rmCartProduct(data.id)}
+                    >
+                      <i className="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </li>
+              ))}
           </ul>
           <div className="offcanvas-cart-total-price">
             <span className="offcanvas-cart-total-price-text">Toplam :</span>
@@ -397,7 +403,7 @@ const Header = () => {
           <h4 className="offcanvas-title">Favoriler</h4>
 
           <ul className="offcanvas-wishlist">
-            {favorites.map((data, index) => (
+            {favorites&&favorites.map((data, index) => (
               <li className="offcanvas-wishlist-item-single" key={index}>
                 <div className="offcanvas-wishlist-item-block">
                   <Link to={`/product-details-one/${data.id}`} className="offcanvas-wishlist-item-image-link">

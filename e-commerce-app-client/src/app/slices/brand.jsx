@@ -29,7 +29,8 @@ const brandSlice = createSlice({
         state.brands = action.payload.result;
       })
       .addCase(getBrand.fulfilled, (state, action) => {
-        state.brand[action.payload.result.id] = action.payload.result;
+        if (action.payload.result !== null)
+          state.brand[action.payload.result.id] = action.payload.result;
       })
   },
 });
