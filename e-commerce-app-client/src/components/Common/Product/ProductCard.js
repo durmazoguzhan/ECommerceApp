@@ -15,14 +15,12 @@ const ProductCard = (props) => {
     dispatch(getBrand({ id: props.data.brandId }));
   }, [dispatch, props.data.brandId]);
 
-  const sepeteEkle = async (id) => {
-    console.log("tıklandı");
-    dispatch({ type: "products/AddToCart", payload: { id } });
+  const addToCart = async (id) => {
+    console.log("sepeteEkle tıklandı");
   };
 
-  const favorilereEkle = async (id) => {
-    console.log("tıklandı");
-    dispatch({ type: "products/addToFavorites", payload: { id } });
+  const addToFavorite = async (id) => {
+    console.log("favorilereEkle tıklandı");
   };
 
   return (
@@ -41,7 +39,7 @@ const ProductCard = (props) => {
               href="#!"
               className="action wishlist"
               title="Favorilere Ekle"
-              onClick={() => favorilereEkle(props.data.id)}
+              onClick={() => addToFavorite(props.data.id)}
             >
               <AiOutlineHeart />
             </a>
@@ -49,7 +47,7 @@ const ProductCard = (props) => {
           <button
             type="button"
             className="add-to-cart offcanvas-toggle"
-            onClick={() => sepeteEkle(props.data.id)}
+            onClick={() => addToCart(props.data.id)}
           >
             Sepete Ekle
           </button>

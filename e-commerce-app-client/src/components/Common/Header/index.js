@@ -1,52 +1,54 @@
-import React, { useState } from "react";
 import logo from "../../../assets/img/logo.png";
-import { Link } from "react-router-dom";
 import { MenuData } from "./MenuData";
 import NaveItems from "./NaveItems";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import svg from "../../../assets/img/svg/cancel.svg";
 import logoWhite from "../../../assets/img/logo-white.png";
 import svgsearch from "../../../assets/img/svg/search.svg";
+import { getCartByUserId } from "../../../app/slices/cart";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { useAuth } from "oidc-react";
+import React, { useState, useEffect } from "react";
 
 const Header = () => {
-  let carts = useSelector((state) => state.products.carts);
-  let favorites = useSelector((state) => state.products.favorites);
+  const dispatch = useDispatch();
+  const auth = useAuth();
+
+  const user = useSelector((state) => state.users.user);
+  const userId = user ? user.id : null;
+  const cart = useSelector((state) => state.carts.cart);
+
+  useEffect(() => {
+    dispatch(getCartByUserId({ userId: userId }));
+  }, [dispatch, userId]);
+
   const [click, setClick] = useState(false);
   const history = useNavigate();
-  let dispatch = useDispatch();
 
-  const rmCartProduct = (id) => {
-    dispatch({ type: "products/removeCart", payload: { id } });
-  };
-
-  const rmFavProduct = (id) => {
-    dispatch({ type: "products/removeToFav", payload: { id } });
-  };
-
-  const cartTotal = () => {
-    return carts&&carts.reduce(function (total, item) {
-      return total + (item.quantity || 1) * item.price;
-    }, 0);
-  };
+  const favorites = null;
+  const carts = null;
 
   const handleClick = () => {
-    if (click) {
-      document.querySelector("#offcanvas-add-cart").style = "transform: translateX(100%);";
-    } else {
-      document.querySelector("#offcanvas-add-cart").style = "transform: translateX(0%);";
-    }
-    setClick(!click);
+    if (user) {
+      if (click) {
+        document.querySelector("#offcanvas-add-cart").style = "transform: translateX(100%);";
+      } else {
+        document.querySelector("#offcanvas-add-cart").style = "transform: translateX(0%);";
+      }
+      setClick(!click);
+    } else auth.signIn();
   };
 
   const handleWish = () => {
-    if (click) {
-      document.querySelector("#offcanvas-wishlish").style = "transform: translateX(100%);";
-    } else {
-      document.querySelector("#offcanvas-wishlish").style = "transform: translateX(0);";
-    }
-    setClick(!click);
+    if (user) {
+      if (click) {
+        document.querySelector("#offcanvas-wishlish").style = "transform: translateX(100%);";
+      } else {
+        document.querySelector("#offcanvas-wishlish").style = "transform: translateX(0);";
+      }
+      setClick(!click);
+    } else auth.signIn();
   };
 
   const handleSearch = () => {
@@ -365,7 +367,9 @@ const Header = () => {
                     <a
                       href="#!"
                       className="offcanvas-wishlist-item-delete"
-                      onClick={() => rmCartProduct(data.id)}
+                      onClick={() => {
+                        console.log("delete wishlist clicked");
+                      }}
                     >
                       <i className="fa fa-trash"></i>
                     </a>
@@ -375,7 +379,7 @@ const Header = () => {
           </ul>
           <div className="offcanvas-cart-total-price">
             <span className="offcanvas-cart-total-price-text">Toplam :</span>
-            <span className="offcanvas-cart-total-price-value">{cartTotal()}.00 TL</span>
+            <span className="offcanvas-cart-total-price-value">{}.00 TL</span>
           </div>
           <ul className="offcanvas-cart-action-button">
             <li>
@@ -403,33 +407,39 @@ const Header = () => {
           <h4 className="offcanvas-title">Favoriler</h4>
 
           <ul className="offcanvas-wishlist">
-            {favorites&&favorites.map((data, index) => (
-              <li className="offcanvas-wishlist-item-single" key={index}>
-                <div className="offcanvas-wishlist-item-block">
-                  <Link to={`/product-details-one/${data.id}`} className="offcanvas-wishlist-item-image-link">
-                    <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
-                  </Link>
-                  <div className="offcanvas-wishlist-item-content">
-                    <Link to={`/product-details-one/${data.id}`} className="offcanvas-wishlist-item-link">
-                      {data.title}
+            {favorites &&
+              favorites.map((data, index) => (
+                <li className="offcanvas-wishlist-item-single" key={index}>
+                  <div className="offcanvas-wishlist-item-block">
+                    <Link
+                      to={`/product-details-one/${data.id}`}
+                      className="offcanvas-wishlist-item-image-link"
+                    >
+                      <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
                     </Link>
-                    <div className="offcanvas-wishlist-item-details">
-                      <span className="offcanvas-wishlist-item-details-quantity">1 x</span>
-                      <span className="offcanvas-wishlist-item-details-price">{data.price}</span>
+                    <div className="offcanvas-wishlist-item-content">
+                      <Link to={`/product-details-one/${data.id}`} className="offcanvas-wishlist-item-link">
+                        {data.title}
+                      </Link>
+                      <div className="offcanvas-wishlist-item-details">
+                        <span className="offcanvas-wishlist-item-details-quantity">1 x</span>
+                        <span className="offcanvas-wishlist-item-details-price">{data.price}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="offcanvas-wishlist-item-delete text-right">
-                  <a
-                    href="#!"
-                    className="offcanvas-wishlist-item-delete"
-                    onClick={() => rmFavProduct(data.id)}
-                  >
-                    <i className="fa fa-trash"></i>
-                  </a>
-                </div>
-              </li>
-            ))}
+                  <div className="offcanvas-wishlist-item-delete text-right">
+                    <a
+                      href="#!"
+                      className="offcanvas-wishlist-item-delete"
+                      onClick={() => {
+                        console.log("delete wishlist clicked");
+                      }}
+                    >
+                      <i className="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </li>
+              ))}
           </ul>
           <ul className="offcanvas-wishlist-action-button">
             <li>

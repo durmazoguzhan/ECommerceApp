@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../assets/img/common/avater.png";
+import { useSelector } from "react-redux";
 import { useAuth } from "oidc-react";
 
 const TopHeader = () => {
+  const user = useSelector((state) => state.users.user);
   const auth = useAuth();
 
   return (
@@ -13,18 +15,20 @@ const TopHeader = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
               <div className="top_header_right">
-                {auth.userData ? (
+                {user ? (
                   <ul className="right_list_fix">
                     <li className="after_login">
                       <img src={avatar} alt="avatar" />
-                      {auth.userData.profile.given_name} {auth.userData.profile.family_name}
+                      {user.firstName} {user.lastName}
                       <i className="fa fa-angle-down"></i>
                       <ul className="custom_dropdown">
-                        <li>
-                          <Link to="/admin-panel">
-                            <i className="fa fa-tachometer"></i> Panel
-                          </Link>
-                        </li>
+                        {user.role === "Admin" && (
+                          <li>
+                            <Link to="/admin-panel">
+                              <i className="fa fa-tachometer"></i> Panel
+                            </Link>
+                          </li>
+                        )}
                         <li>
                           <Link to="/my-account/customer-order">
                             <i className="fa fa-cubes"></i> Siparişlerim
@@ -46,12 +50,12 @@ const TopHeader = () => {
                         Giriş Yap
                       </button>
                     </li>
-                    <li>
-                      <Link to="/register">
+                    {/* <li>
+                      <Link to="/">
                         <i className="fa fa-lock"></i>
                         Kayıt Ol
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 )}
               </div>

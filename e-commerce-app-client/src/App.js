@@ -6,6 +6,7 @@ import "./assets/css/style.css";
 import { IKContext } from "imagekitio-react";
 import { AuthProvider } from "oidc-react";
 import oidcConfig from "./app/oidcConfig";
+import { useDispatch } from "react-redux";
 
 const Fashion = loadable(() => pMinDelay(import("./page/"), 250), { fallback: <Loader /> });
 const Register = loadable(() => pMinDelay(import("./page/register"), 250), { fallback: <Loader /> });
@@ -16,7 +17,6 @@ const About = loadable(() => pMinDelay(import("./page/about"), 250), { fallback:
 const ContactTwo = loadable(() => pMinDelay(import("./page/Contact/contact-two"), 250), {
   fallback: <Loader />,
 });
-const Login = loadable(() => pMinDelay(import("./page/login"), 250), { fallback: <Loader /> });
 const Cart = loadable(() => pMinDelay(import("./page/cart/index"), 250), { fallback: <Loader /> });
 const Favorites = loadable(() => pMinDelay(import("./page/Wishlist/index"), 250), { fallback: <Loader /> });
 
@@ -41,10 +41,21 @@ const CustomerAccountDetails = loadable(
     fallback: <Loader />,
   }
 );
+
 function App() {
+  const dispatch = useDispatch();
+
   return (
     <IKContext urlEndpoint="https://ik.imagekit.io/inveshop/">
-      <AuthProvider {...oidcConfig}>
+      <AuthProvider
+        {...oidcConfig}
+        onSignIn={(user) => {
+          dispatch({ type: "user/login", payload: user.profile });
+        }}
+        onSignOut={() => {
+          dispatch({ type: "user/logout" });
+        }}
+      >
         <div>
           <BrowserRouter>
             <Routes>
@@ -52,7 +63,6 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Favorites />} />
-              <Route path="/login" element={<Login />} />
               <Route path="/product-details-two/:id" element={<ProductDetailsTwos />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<ContactTwo />} />
