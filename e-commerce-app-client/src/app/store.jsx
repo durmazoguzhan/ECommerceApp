@@ -8,7 +8,7 @@ import brandReducer from "./slices/brand";
 export const store = configureStore({
   reducer: {
     products: productReducer,
-    user: userReducer,
+    users: userReducer,
     settings: settingsReducer,
     categories: categoryReducer,
     brands: brandReducer

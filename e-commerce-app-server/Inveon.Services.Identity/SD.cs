@@ -19,8 +19,9 @@ namespace Inveon.Services.Identity
         public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope> {
                 new ApiScope("inveon", "Inveon Server"),
+                new ApiScope("inveshop", "InveShop Server"),
                 new ApiScope(name: "read",   displayName: "Veri Okuyabilir."),
-                new ApiScope(name: "write",  displayName: "Veri Yazabiliri"),
+                new ApiScope(name: "write",  displayName: "Veri Yazabilir"),
                 new ApiScope(name: "delete", displayName: "Veri Silebilir")
         };
 
@@ -49,6 +50,22 @@ namespace Inveon.Services.Identity
                         "inveon"
                     }
                 },
+                new Client
+                {
+                    ClientId="inveshop",
+                    ClientSecrets= { new Secret("secret".Sha256())},
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RedirectUris={ "http://localhost:3000/signin-oidc" },
+                    PostLogoutRedirectUris={"http://localhost:3000/signout-callback-oidc" },
+                    AllowedScopes=new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "inveshop"
+                    }
+                }
             };
     }
 }

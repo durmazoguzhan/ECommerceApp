@@ -44,6 +44,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
+
+app.UseCors(options => options
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowAnyOrigin());
+
 app.UseIdentityServer();
 app.UseAuthorization();
 

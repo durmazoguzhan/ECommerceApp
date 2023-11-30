@@ -1,21 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../assets/img/common/avater.png";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "oidc-react";
 
 const TopHeader = () => {
-  let dispatch = useDispatch();
-  const history = useNavigate();
-
-  let status = useSelector((state) => state.user.status);
-  let user = useSelector((state) => state.user.user);
-
-  const logout = () => {
-    console.log("logouta tiklandi");
-    dispatch({ type: "user/logout" });
-    history("/");
-  };
+  const auth = useAuth();
 
   return (
     <>
@@ -24,26 +13,12 @@ const TopHeader = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
               <div className="top_header_right">
-                {!status ? (
-                  <ul className="right_list_fix">
-                    <li>
-                      <Link to="/login">
-                        <i className="fa fa-user"></i>
-                        Giriş Yap
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/register">
-                        <i className="fa fa-lock"></i>
-                        Kayıt Ol
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
+                {auth.userData ? (
                   <ul className="right_list_fix">
                     <li className="after_login">
-                      <img src={avatar} alt="avater" />
-                      {user.name || "İbrahim Gökyar"} <i className="fa fa-angle-down"></i>
+                      <img src={avatar} alt="avatar" />
+                      {auth.userData.profile.given_name} {auth.userData.profile.family_name}
+                      <i className="fa fa-angle-down"></i>
                       <ul className="custom_dropdown">
                         <li>
                           <Link to="/admin-panel">
@@ -56,16 +31,26 @@ const TopHeader = () => {
                           </Link>
                         </li>
                         <li>
-                          <Link
-                            to="#!"
-                            onClick={() => {
-                              logout();
-                            }}
-                          >
+                          <button onClick={() => auth.signOut()}>
                             <i className="fa fa-sign-out"></i> Çıkış Yap
-                          </Link>
+                          </button>
                         </li>
                       </ul>
+                    </li>
+                  </ul>
+                ) : (
+                  <ul className="right_list_fix">
+                    <li>
+                      <button onClick={() => auth.signIn()}>
+                        <i className="fa fa-user"></i>
+                        Giriş Yap
+                      </button>
+                    </li>
+                    <li>
+                      <Link to="/register">
+                        <i className="fa fa-lock"></i>
+                        Kayıt Ol
+                      </Link>
                     </li>
                   </ul>
                 )}
