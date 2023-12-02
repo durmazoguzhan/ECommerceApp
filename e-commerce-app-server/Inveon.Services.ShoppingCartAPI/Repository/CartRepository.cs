@@ -63,6 +63,15 @@ namespace Inveon.Services.ShoppingCartAPI.Repository
                 cartHeaderFromDb = await _db.CartHeaders.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
             }
+            else
+            {
+                if (cart.CartHeader.Id != null && cart.CartHeader.Id != 0)
+                {
+                    cartHeaderFromDb.CouponCode = cart.CartHeader.CouponCode;
+                    _db.CartHeaders.Update(cartHeaderFromDb);
+                    await _db.SaveChangesAsync();
+                }
+            }
 
             foreach (var cartDetail in cart.CartDetails)
             {

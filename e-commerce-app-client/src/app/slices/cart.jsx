@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import CartService from "../services/CartService";
+import CouponService from "../services/CouponService";
 import Swal from "sweetalert2";
 
 export const getCartByUserId = createAsyncThunk(
@@ -34,10 +35,24 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
+export const getCouponByCouponCode = createAsyncThunk(
+  "coupon/getByCouponCode",
+  async ({ couponCode }) => {
+    const res = await CouponService.getByCouponCode(couponCode);
+    return res.data;
+  }
+);
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    cart: null
+    cart: null,
+    coupon: null
+  },
+  reducers: {
+    removeCoupon: (state) => {
+      state.coupon = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,12 +62,13 @@ const cartSlice = createSlice({
       .addCase(createUpdateCart.fulfilled, (state, action) => {
         if (action.payload.isSuccess) {
           if (action.payload.result)
-            state.cart=action.payload.result;
+            state.cart = action.payload.result;
           Swal.fire({
             title: "Başarılı!",
             text: "Ürün başarıyla sepetinize eklendi.",
-            timer: 1000,
-            icon: 'success'
+            timer: 1500,
+            icon: 'success',
+            showConfirmButton: false
           });
         }
         else {
@@ -90,6 +106,15 @@ const cartSlice = createSlice({
             icon: 'error'
           });
         }
+      })
+      .addCase(getCouponByCouponCode.fulfilled, (state, action) => {
+        if (action.payload.result) {
+          state.coupon = action.payload.result;
+        }
+        else {
+          state.coupon = null;
+        }
+
       })
   },
 });

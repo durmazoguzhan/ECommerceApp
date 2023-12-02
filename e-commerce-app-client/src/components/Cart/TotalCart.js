@@ -6,8 +6,13 @@ const TotalCart = () => {
   const cart = useSelector((state) => state.carts.cart);
   const user = useSelector((state) => state.users.user);
   const products = useSelector((state) => state.products.products);
+  const coupon = useSelector((state) => state.carts.coupon);
 
   const cartTotal = () => {
+    return cartSubTotal() - (coupon ? coupon.discountAmount : 0);
+  };
+
+  const cartSubTotal = () => {
     let cartTotal = 0;
     if (user && cart && products) {
       cart.cartDetails.map(
@@ -18,6 +23,7 @@ const TotalCart = () => {
     }
     return cartTotal;
   };
+
   return (
     <>
       <div className="col-lg-6 col-md-6">
@@ -25,10 +31,15 @@ const TotalCart = () => {
           <h3>Toplam : </h3>
           <div className="coupon_inner">
             <div className="cart_subtotal">
-              <p>Ara Toplam : </p>
-              <p className="cart_amount">{cartTotal()} TL</p>
+              <p>Alt Toplam : </p>
+              <p className="cart_amount">{cartSubTotal()} TL</p>
             </div>
-
+            {coupon && (
+              <div className="cart_subtotal">
+                <p>Kupon İndirimi({coupon.couponCode}) : </p>
+                <p className="cart_amount">-{coupon.discountAmount.toFixed(2)} TL</p>
+              </div>
+            )}
             <div className="cart_subtotal">
               <p>Toplam</p>
               <p className="cart_amount">{cartTotal()} TL</p>
