@@ -1,65 +1,73 @@
-.txt-primary-clr{
+.txt-primary-clr {
   color: var(--primary-color) !important;
 }
-.bg-primary-clr{
-  background-color: var(--primary-color)!important;
+.bg-primary-clr {
+  background-color: var(--primary-color) !important;
 }
 
-.txt-secondary-clr{
-  color: var(--secondary-color)!important;
+.txt-secondary-clr {
+  color: var(--secondary-color) !important;
 }
-.bg-secondary-clr{
-  background-color: var(--secondary-color)!important;
-}
-
-.txt-alt-primary-clr{
-  color: var(--alt-primary-color)!important;
-}
-.bg-alt-primary-clr{
-  background-color: var(--alt-primary-color)!important;
+.bg-secondary-clr {
+  background-color: var(--secondary-color) !important;
 }
 
-.txt-alt-secondary-clr{
-  color: var(--alt-secondary-color)!important;
+.txt-alt-primary-clr {
+  color: var(--alt-primary-color) !important;
 }
-.bg-alt-secondary-clr{
-  background-color: var(--alt-secondary-color)!important;
-}
-
-.txt-black-clr{
-  color: var(--black-color)!important;
-}
-.bg-black-clr{
-  background-color: var(--black-color)!important;
+.bg-alt-primary-clr {
+  background-color: var(--alt-primary-color) !important;
 }
 
-.txt-gray-clr{
-  color: var(--gray-color)!important;
+.txt-alt-secondary-clr {
+  color: var(--alt-secondary-color) !important;
 }
-.bg-gray-clr{
-  background-color: var(--gray-color)!important;
-}
-
-.txt-white-clr{
-  color: var(--white-color)!important;
-}
-.bg-white-clr{
-  background-color: var(--white-color)!important;
+.bg-alt-secondary-clr {
+  background-color: var(--alt-secondary-color) !important;
 }
 
-.gap-5{
+.txt-black-clr {
+  color: var(--black-color) !important;
+}
+.bg-black-clr {
+  background-color: var(--black-color) !important;
+}
+
+.txt-gray-clr {
+  color: var(--gray-color) !important;
+}
+.bg-gray-clr {
+  background-color: var(--gray-color) !important;
+}
+
+.txt-white-clr {
+  color: var(--white-color) !important;
+}
+.bg-white-clr {
+  background-color: var(--white-color) !important;
+}
+
+.gap-5 {
   gap: 5% !important;
 }
-.gap-4{
+.gap-4 {
   gap: 4% !important;
 }
-.gap-3{
+.gap-3 {
   gap: 3% !important;
 }
-.gap-2{
+.gap-2 {
   gap: 2% !important;
 }
-.gap-1{
+.gap-1 {
   gap: 1% !important;
 }
 
+.no-spinners {
+  -moz-appearance: textfield;
+}
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

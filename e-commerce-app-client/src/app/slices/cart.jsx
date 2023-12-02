@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import CartService from "../services/CartService";
 import CouponService from "../services/CouponService";
+import CheckoutService from "../services/CheckoutService";
 import Swal from "sweetalert2";
 
 export const getCartByUserId = createAsyncThunk(
@@ -39,6 +40,14 @@ export const getCouponByCouponCode = createAsyncThunk(
   "coupon/getByCouponCode",
   async ({ couponCode }) => {
     const res = await CouponService.getByCouponCode(couponCode);
+    return res.data;
+  }
+);
+
+export const checkoutCart = createAsyncThunk(
+  "cartc/checkout",
+  async ({ data, token }) => {
+    const res = await CheckoutService.checkout(data, token);
     return res.data;
   }
 );
@@ -115,6 +124,20 @@ const cartSlice = createSlice({
           state.coupon = null;
         }
 
+      })
+      .addCase(checkoutCart.fulfilled, (state, action) => {
+        if (action.payload.isSuccess) {
+          state.cart = null;
+          state.coupon = null;
+        }
+        else {
+          Swal.fire({
+            title: "Başarısız!",
+            text: "Ödeme işleminiz gerçekleşirken bir hata oluştu.",
+            timer: 2000,
+            icon: 'error'
+          });
+        }
       })
   },
 });

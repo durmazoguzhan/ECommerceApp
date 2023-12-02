@@ -4,24 +4,23 @@ import { useSelector } from "react-redux";
 
 const TotalCart = () => {
   const cart = useSelector((state) => state.carts.cart);
-  const user = useSelector((state) => state.users.user);
   const products = useSelector((state) => state.products.products);
   const coupon = useSelector((state) => state.carts.coupon);
 
   const cartTotal = () => {
-    return cartSubTotal() - (coupon ? coupon.discountAmount : 0);
+    return (cartSubTotal() - (coupon ? coupon.discountAmount : 0)).toFixed(2);
   };
 
   const cartSubTotal = () => {
     let cartTotal = 0;
-    if (user && cart && products) {
+    if (cart && products) {
       cart.cartDetails.map(
         (detail) =>
           products.find((product) => product.id === detail.productId) &&
           (cartTotal += products.find((product) => product.id === detail.productId).salePrice * detail.count)
       );
     }
-    return cartTotal;
+    return cartTotal.toFixed(2);
   };
 
   return (
