@@ -10,6 +10,8 @@ import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { useAuth } from "oidc-react";
 import React, { useState, useEffect } from "react";
+import { IKImage } from "imagekitio-react";
+import { removeFromCart } from "../../../app/slices/cart";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,16 @@ const Header = () => {
   const user = useSelector((state) => state.users.user);
   const userId = user ? user.id : null;
   const cart = useSelector((state) => state.carts.cart);
+  const products = useSelector((state) => state.products.products);
+  let cartTotal = null;
+  if (user && cart && products) {
+    cart.cartDetails.map(
+      (detail) =>
+        (cartTotal += products.find((product) => product.id === detail.productId)
+          ? products.find((product) => product.id === detail.productId).salePrice
+          : 0 * detail.count)
+    );
+  }
 
   useEffect(() => {
     dispatch(getCartByUserId({ userId: userId }));
@@ -27,7 +39,10 @@ const Header = () => {
   const history = useNavigate();
 
   const favorites = null;
-  const carts = null;
+
+  const removeDetailFromCart = async (cartDetailId) => {
+    dispatch(removeFromCart({ cartDetailId: cartDetailId, token: user.token }));
+  };
 
   const handleClick = () => {
     if (user) {
@@ -123,10 +138,10 @@ const Header = () => {
                       )}
                     </li>
                     <li>
-                      {carts && carts.length ? (
+                      {cart && cart.cartDetails.length ? (
                         <a href="#!" className="offcanvas-toggle" onClick={handleClick}>
                           <i className="fa fa-shopping-bag"></i>
-                          <span className="item-count">{carts.length}</span>
+                          <span className="item-count">{cart.cartDetails.length}</span>
                         </a>
                       ) : (
                         <a href="#!" className="offcanvas-toggle">
@@ -143,8 +158,7 @@ const Header = () => {
                     <li>
                       <a
                         href="#offcanvas-about"
-                        className="offacnvas offside-about 
-                                            offcanvas-toggle"
+                        className="offside-about offcanvas-toggle"
                         onClick={handleabout}
                       >
                         <i className="fa fa-bars"></i>
@@ -202,10 +216,10 @@ const Header = () => {
                     )}
                   </li>
                   <li>
-                    {carts && carts.length ? (
+                    {cart && cart.cartDetails.length ? (
                       <a href="#!" className="offcanvas-toggle" onClick={handleClick}>
                         <i className="fa fa-shopping-bag"></i>
-                        <span className="item-count">{carts.length}</span>
+                        <span className="item-count">{cart.cartDetails.length}</span>
                       </a>
                     ) : (
                       <a href="#!" className="offcanvas-toggle">
@@ -341,25 +355,38 @@ const Header = () => {
         <div className="offcanvas-add-cart-wrapper">
           <h4 className="offcanvas-title">Alışveriş Sepeti</h4>
           <ul className="offcanvas-cart">
-            {carts &&
-              carts.map((data, index) => (
-                <li className="offcanvas-wishlist-item-single" key={index}>
+            {cart &&
+              products &&
+              cart.cartDetails.map((data) => (
+                <li className="offcanvas-wishlist-item-single" key={data.id}>
                   <div className="offcanvas-wishlist-item-block">
                     <Link
-                      to={`/product-details-two/${data.id}`}
+                      to={`/product-details-two/${data.productId}`}
                       className="offcanvas-wishlist-item-image-link"
                     >
-                      <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
+                      <IKImage
+                        path={`/ProductImages/${
+                          products.find((product) => product.id === data.productId) &&
+                          products.find((product) => product.id === data.productId).images.split(",")[0]
+                        }`}
+                        className="offcanvas-wishlist-image"
+                      />
                     </Link>
                     <div className="offcanvas-wishlist-item-content">
-                      <Link to={`/product-details-two/${data.id}`} className="offcanvas-wishlist-item-link">
-                        {data.title}
+                      <Link
+                        to={`/product-details-two/${data.productId}`}
+                        className="offcanvas-wishlist-item-link"
+                      >
+                        {products.find((product) => product.id === data.productId) &&
+                          products.find((product) => product.id === data.productId).name}
                       </Link>
                       <div className="offcanvas-wishlist-item-details">
-                        <span className="offcanvas-wishlist-item-details-quantity">
-                          {data.quantity || 1} x
+                        <span className="offcanvas-wishlist-item-details-price">
+                          {products.find((product) => product.id === data.productId) &&
+                            products.find((product) => product.id === data.productId).salePrice.toFixed(2)}
+                          TL
                         </span>
-                        <span className="offcanvas-wishlist-item-details-price">{data.price} TL</span>
+                        <span className="offcanvas-wishlist-item-details-quantity"> x{data.count}</span>
                       </div>
                     </div>
                   </div>
@@ -367,9 +394,7 @@ const Header = () => {
                     <a
                       href="#!"
                       className="offcanvas-wishlist-item-delete"
-                      onClick={() => {
-                        console.log("delete wishlist clicked");
-                      }}
+                      onClick={() => removeDetailFromCart(data.id)}
                     >
                       <i className="fa fa-trash"></i>
                     </a>
@@ -379,17 +404,17 @@ const Header = () => {
           </ul>
           <div className="offcanvas-cart-total-price">
             <span className="offcanvas-cart-total-price-text">Toplam :</span>
-            <span className="offcanvas-cart-total-price-value">{}.00 TL</span>
+            <span className="offcanvas-cart-total-price-value">{cartTotal && cartTotal.toFixed(2)} TL</span>
           </div>
           <ul className="offcanvas-cart-action-button">
             <li>
-              <Link to="/cart" className="theme-btn-one btn-black-overlay btn_md">
-                Sepeti Görüntüle
+              <Link to="/cart" className="theme-btn-one btn-black-overlay btn_md text-left">
+                SEPETİ GÖRÜNTÜLE
               </Link>
             </li>
             <li>
-              <Link to="/checkout-two" className="theme-btn-one btn-black-overlay btn_md">
-                Alışverişi Tamamla
+              <Link to="/checkout-two" className="theme-btn-one btn-black-overlay btn_md text-right">
+                ALIŞVERİŞİ TAMAMLA
               </Link>
             </li>
           </ul>

@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../../assets/img/common/avater.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useAuth } from "oidc-react";
 
 const TopHeader = () => {
   const user = useSelector((state) => state.users.user);
   const auth = useAuth();
+  const dispatch = useDispatch();
+  if (auth.userData && !user) dispatch({ type: "user/login", payload: auth.userData });
 
   return (
     <>

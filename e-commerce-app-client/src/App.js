@@ -50,7 +50,7 @@ function App() {
       <AuthProvider
         {...oidcConfig}
         onSignIn={(user) => {
-          dispatch({ type: "user/login", payload: user.profile });
+          dispatch({ type: "user/login", payload: user });
         }}
         onSignOut={() => {
           dispatch({ type: "user/logout" });

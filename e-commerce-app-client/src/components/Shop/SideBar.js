@@ -39,7 +39,7 @@ const SideBar = (props) => {
           </div>
 
           <div className="shop_sidebar_boxed">
-            <h4>Ürün Kategorileri</h4>
+            <h4>Kategori</h4>
             {
               <label className="custom_boxed_current_category" aria-readonly key={currentCategory.id}>
                 {currentCategory.name}
@@ -50,7 +50,11 @@ const SideBar = (props) => {
                 categories.map(
                   (category) =>
                     category.parentCategoryId === currentCategory.id && (
-                      <label className="custom_boxed" key={category.id} onClick={()=>setCurrentCategory(category)}>
+                      <label
+                        className="custom_boxed"
+                        key={category.id}
+                        onClick={() => setCurrentCategory(category)}
+                      >
                         {category.name}
                         <input type="radio" name="radio" />
                         <span className="checkmark"></span>
@@ -59,22 +63,12 @@ const SideBar = (props) => {
                 )}
             </form>
           </div>
-
-          <div className="shop_sidebar_boxed">
-            <h4>Fiyat</h4>
-            <div className="price_filter">
-              <input type="range" min="10" max="200" className="form-control-range" id="formControlRange" />
-              <div className="price_slider_amount mt-2">
-                <span>Fiyat : </span>
-              </div>
-            </div>
-          </div>
           <div className="shop_sidebar_boxed">
             <h4>Marka</h4>
             <form>
               {brands &&
                 brands.map((brand) => (
-                  <label className="custom_boxed" key={brand.id} onClick={()=>setCurrentBrand(brand)}>
+                  <label className="custom_boxed" key={brand.id} onClick={() => setCurrentBrand(brand)}>
                     {brand.name}
                     <input type="radio" name="radio" />
                     <span className="checkmark"></span>

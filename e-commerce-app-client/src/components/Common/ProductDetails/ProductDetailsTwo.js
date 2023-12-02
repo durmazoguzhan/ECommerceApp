@@ -8,6 +8,8 @@ import { IKImage } from "imagekitio-react";
 import ProductInfo from "./ProductInfo";
 import { getProduct } from "../../../app/slices/product";
 import { getBrand } from "../../../app/slices/brand";
+import { createUpdateCart } from "../../../app/slices/cart";
+import { useAuth } from "oidc-react";
 
 const ProductDetailsTwo = () => {
   useEffect(() => {
@@ -15,22 +17,23 @@ const ProductDetailsTwo = () => {
   }, []);
 
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const auth = useAuth();
+
   const product = useSelector((state) => state.products.product[id]);
   const brandId = product ? product.brandId : null;
   const brand = useSelector((state) => state.brands.brand[brandId]);
+  const user = useSelector((state) => state.users.user);
 
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getProduct({ id: id }));
     dispatch(getBrand({ id: brandId }));
   }, [dispatch, id, brandId]);
 
-  // Quenty Inc Dec
   const [count, setCount] = useState(1);
   const incNum = () => {
     setCount(count + 1);
   };
-
   const decNum = () => {
     if (count > 0) {
       setCount(count - 1);
@@ -40,7 +43,31 @@ const ProductDetailsTwo = () => {
     }
   };
 
-  let settings = {
+  const [size, setSize] = useState("M");
+  const changeSize = (event) => {
+    setSize(event.target.value);
+  };
+
+  const addToCart = async (productId) => {
+    if (user) {
+      const data = {
+        CartHeader: {
+          userId: user.id,
+          couponCode: null,
+        },
+        CartDetails: [
+          {
+            productId: productId,
+            count: count,
+            size: size,
+          },
+        ],
+      };
+      dispatch(createUpdateCart({ data: data, token: user.token }));
+    } else auth.signIn();
+  };
+
+  let sliderSettings = {
     arrows: true,
     dots: true,
     infinite: true,
@@ -67,7 +94,7 @@ const ProductDetailsTwo = () => {
             <div className="row area_boxed">
               <div className="col-lg-4">
                 <div className="product_single_two_img slider-for">
-                  <Slider {...settings}>
+                  <Slider {...sliderSettings}>
                     {product.images.split(",").map((image, index) => (
                       <IKImage path={`/ProductImages/${image}`} key={index} />
                     ))}
@@ -85,7 +112,12 @@ const ProductDetailsTwo = () => {
                     </h4>
                     <p>{product.description}</p>
                     <div className="customs_selects">
-                      <select name="size" className="customs_sel_box">
+                      <select
+                        name="size"
+                        className="customs_sel_box"
+                        defaultValue={size}
+                        onChange={(event) => changeSize(event)}
+                      >
                         <option value="XS">XS</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
@@ -118,9 +150,9 @@ const ProductDetailsTwo = () => {
                           </a>
                         </li>
                       </ul>
-                      <a href="#!" className="theme-btn-one btn-black-overlay btn_sm">
+                      <button onClick={() => addToCart(product.id)} className="theme-btn-one btn-black-overlay btn_sm">
                         Sepete Ekle
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

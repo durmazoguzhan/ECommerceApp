@@ -1,25 +1,43 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import { IKImage } from "imagekitio-react";
 import { getBrand } from "../../../app/slices/brand";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { createUpdateCart } from "../../../app/slices/cart";
+import { useAuth } from "oidc-react";
 
 const ProductCard = (props) => {
   const brand = useSelector((state) => state.brands.brand[props.data.brandId]);
+  const user = useSelector((state) => state.users.user);
 
   const dispatch = useDispatch();
+  const auth = useAuth();
+
   useEffect(() => {
     dispatch(getBrand({ id: props.data.brandId }));
   }, [dispatch, props.data.brandId]);
 
-  const addToCart = async (id) => {
-    console.log("sepeteEkle tıklandı");
+  const addToCart = async (productId) => {
+    if (user) {
+      const data = {
+        CartHeader: {
+          userId: user.id,
+          couponCode: null,
+        },
+        CartDetails: [
+          {
+            productId: productId,
+            count: 1,
+            size: "M",
+          },
+        ],
+      };
+      dispatch(createUpdateCart({ data: data, token: user.token }));
+    } else auth.signIn();
   };
 
-  const addToFavorite = async (id) => {
+  const addToFavorite = async (productId) => {
     console.log("favorilereEkle tıklandı");
   };
 

@@ -15,7 +15,7 @@ const Coupon = () => {
                 Swal.fire("Error!!", "Geçersiz Kupon Kodu", "error");
               }}
             >
-              <input className="mb-2" placeholder="Coupon code" type="text" required />
+              <input className="mb-2" placeholder="Kupon kodunuz..." type="text" required />
               <button type="submit" className="theme-btn-one btn-black-overlay btn_sm">
                 Onayla
               </button>

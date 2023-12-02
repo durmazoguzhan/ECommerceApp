@@ -8,10 +8,11 @@ const userSlice = createSlice({
   reducers: {
     login: (state, action) => {
       const userInfo = {
-        'id': action.payload.sub,
-        'firstName': action.payload.given_name,
-        'lastName': action.payload.family_name,
-        'role': action.payload.role
+        id: action.payload.profile.sub,
+        firstName: action.payload.profile.given_name,
+        lastName: action.payload.profile.family_name,
+        role: action.payload.profile.role,
+        token: action.payload.access_token
       };
       state.user = userInfo;
       console.log("successfully logged in.");

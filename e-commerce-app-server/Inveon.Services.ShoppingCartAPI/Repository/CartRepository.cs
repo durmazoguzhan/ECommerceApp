@@ -56,7 +56,6 @@ namespace Inveon.Services.ShoppingCartAPI.Repository
 
             var cartHeaderFromDb = await _db.CartHeaders.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
-
             if (cartHeaderFromDb == null)
             {
                 _db.CartHeaders.Add(cart.CartHeader);
@@ -65,31 +64,24 @@ namespace Inveon.Services.ShoppingCartAPI.Repository
                 .FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
             }
 
-            var cartDetailsFromDb = await _db.CartDetails.AsNoTracking().FirstOrDefaultAsync(
-                u => u.ProductId == cart.CartDetails.FirstOrDefault().ProductId &&
-                u.CartHeaderId == cartHeaderFromDb.Id);
-
-            if (cartDetailsFromDb == null)
+            foreach (var cartDetail in cart.CartDetails)
             {
-                foreach (var cartDetail in cart.CartDetails)
-                {
-                    cartDetail.CartHeaderId = cartHeaderFromDb.Id;
+                cartDetail.CartHeaderId = cartHeaderFromDb.Id;
+                var cartDetailFromDb = await _db.CartDetails.AsNoTracking().Where(detail => detail.ProductId == cartDetail.ProductId && detail.CartHeaderId == cartDetail.CartHeaderId).FirstOrDefaultAsync();
+                if (cartDetailFromDb == null)
                     _db.CartDetails.Add(cartDetail);
-                }
-                await _db.SaveChangesAsync();
-            }
-            else
-            {
-                foreach (var cartDetail in cart.CartDetails)
+                else
                 {
-                    cartDetail.CartHeaderId = cartHeaderFromDb.Id;
-                    _db.CartDetails.Update(cartDetail);
+                    cartDetailFromDb.Count = cartDetail.Count;
+                    cartDetailFromDb.Size = cartDetail.Size;
+                    _db.CartDetails.Update(cartDetailFromDb);
                 }
                 await _db.SaveChangesAsync();
             }
 
-            return _mapper.Map<CartDto>(cart);
-
+            var cartDetailsFromDb = _db.CartDetails.AsNoTracking().Where(detail => detail.CartHeaderId == cartHeaderFromDb.Id);
+            var newCart = new Cart { CartHeader = cartHeaderFromDb, CartDetails = cartDetailsFromDb };
+            return _mapper.Map<CartDto>(newCart);
         }
 
         public async Task<CartDto> GetCartByUserId(string userId)
@@ -115,12 +107,12 @@ namespace Inveon.Services.ShoppingCartAPI.Repository
             return _mapper.Map<CartDto>(cart);
         }
 
-        public async Task<bool> RemoveFromCart(int cartDetailsId)
+        public async Task<bool> RemoveFromCart(int cartDetailId)
         {
             try
             {
                 CartDetail cartDetails = await _db.CartDetails
-                    .FirstOrDefaultAsync(u => u.Id == cartDetailsId);
+                    .FirstOrDefaultAsync(u => u.Id == cartDetailId);
 
                 int totalCountOfCartItems = _db.CartDetails
                     .Where(u => u.CartHeaderId == cartDetails.CartHeaderId).Count();
