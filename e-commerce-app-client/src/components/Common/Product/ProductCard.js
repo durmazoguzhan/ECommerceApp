@@ -75,13 +75,19 @@ const ProductCard = (props) => {
               <AiOutlineHeart />
             </a>
           </div>
-          <button
-            type="button"
-            className="add-to-cart offcanvas-toggle"
-            onClick={() => addToCart(props.data.id)}
-          >
-            Sepete Ekle
-          </button>
+          {props.data.quantity > 0 ? (
+            <button
+              type="button"
+              className="add-to-cart offcanvas-toggle"
+              onClick={() => addToCart(props.data.id)}
+            >
+              Sepete Ekle
+            </button>
+          ) : (
+            <button type="button" className="add-to-cart offcanvas-toggle" disabled>
+              Tükendi
+            </button>
+          )}
         </div>
         <div className="content">
           <h5 className="title">

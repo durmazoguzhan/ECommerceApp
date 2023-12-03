@@ -35,11 +35,8 @@ const ProductDetailsTwo = () => {
     setCount(count + 1);
   };
   const decNum = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1);
-    } else {
-      alert("Stokta Yok!");
-      setCount(0);
     }
   };
 
@@ -106,6 +103,9 @@ const ProductDetailsTwo = () => {
                   <div className="modal_product_content_one">
                     <h3>{product.name}</h3>
                     <h5 className="txt-alt-secondary-clr pt-1 font-weight-bold">{brand && brand.name}</h5>
+                    <h6 className="txt-alt-primary-clr pt-1 font-weight-bold">
+                      Stok: {product.quantity} adet
+                    </h6>
                     <h4>
                       {product.salePrice.toFixed(2)} TL
                       {product.listPrice > product.salePrice && <del>{product.listPrice.toFixed(2)} TL</del>}
@@ -150,9 +150,18 @@ const ProductDetailsTwo = () => {
                           </a>
                         </li>
                       </ul>
-                      <button onClick={() => addToCart(product.id)} className="theme-btn-one btn-black-overlay btn_sm">
-                        Sepete Ekle
-                      </button>
+                      {product.quantity > 0 ? (
+                        <button
+                          onClick={() => addToCart(product.id)}
+                          className="theme-btn-one btn-black-overlay btn_sm"
+                        >
+                          Sepete Ekle
+                        </button>
+                      ) : (
+                        <button className="theme-btn-one btn-black-overlay btn_sm" disabled>
+                          TÜKENDİ
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
