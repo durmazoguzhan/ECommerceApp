@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Inveon.Services.FavoriteAPI.Repositories
 {
-    public class FavoriteRepository:IFavoriteRepository
+    public class FavoriteRepository : IFavoriteRepository
     {
         private readonly ApplicationDbContext _db;
         private IMapper _mapper;
@@ -46,11 +46,11 @@ namespace Inveon.Services.FavoriteAPI.Repositories
                 .FirstOrDefaultAsync(u => u.UserId == favorite.FavoriteHeader.UserId);
             }
 
-            var favoriteDetailsFromDb = await _db.FavoriteDetails.AsNoTracking().FirstOrDefaultAsync(
+            var favoriteDetailFromDb = await _db.FavoriteDetails.AsNoTracking().FirstOrDefaultAsync(
                 u => u.ProductId == favorite.FavoriteDetails.FirstOrDefault().ProductId &&
                 u.FavoriteHeaderId == favoriteHeaderFromDb.Id);
 
-            if (favoriteDetailsFromDb == null)
+            if (favoriteDetailFromDb == null)
             {
                 foreach (var favoriteDetail in favorite.FavoriteDetails)
                 {
@@ -69,7 +69,9 @@ namespace Inveon.Services.FavoriteAPI.Repositories
                 await _db.SaveChangesAsync();
             }
 
-            return _mapper.Map<FavoriteDto>(favorite);
+            var favoriteDetailsFromDb = _db.FavoriteDetails.AsNoTracking().Where(detail => detail.FavoriteHeaderId == favoriteHeaderFromDb.Id);
+            var newFavorite = new Favorite { FavoriteHeader = favoriteHeaderFromDb, FavoriteDetails = favoriteDetailsFromDb };
+            return _mapper.Map<FavoriteDto>(newFavorite);
 
         }
 

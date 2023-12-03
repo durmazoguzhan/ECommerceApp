@@ -5,6 +5,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { IKImage } from "imagekitio-react";
 import { getBrand } from "../../../app/slices/brand";
 import { createUpdateCart } from "../../../app/slices/cart";
+import { createUpdateFavorite } from "../../../app/slices/favorite";
 import { useAuth } from "oidc-react";
 
 const ProductCard = (props) => {
@@ -38,7 +39,19 @@ const ProductCard = (props) => {
   };
 
   const addToFavorite = async (productId) => {
-    console.log("favorilereEkle tıklandı");
+    if (user) {
+      const data = {
+        FavoriteHeader: {
+          userId: parseInt(user.id),
+        },
+        FavoriteDetails: [
+          {
+            productId: parseInt(productId),
+          },
+        ],
+      };
+      dispatch(createUpdateFavorite({ data: data, token: user.token }));
+    } else auth.signIn();
   };
 
   return (

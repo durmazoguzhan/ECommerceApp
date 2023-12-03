@@ -17,6 +17,7 @@ const CartArea = () => {
   const userId = user ? user.id : null;
   const cart = useSelector((state) => state.carts.cart);
   const products = useSelector((state) => state.products.products);
+
   let cartTotal = null;
   if (user && cart && products) {
     cart.cartDetails.map(
@@ -121,7 +122,6 @@ const CartArea = () => {
                                   <Link to={`/product-details-two/${cartDetail.productId}`}>
                                     <IKImage
                                       path={`/ProductImages/${
-                                        products.find((product) => product.id === cartDetail.productId) &&
                                         products
                                           .find((product) => product.id === cartDetail.productId)
                                           .images.split(",")[0]
@@ -131,15 +131,13 @@ const CartArea = () => {
                                 </td>
                                 <td className="product_name">
                                   <Link to={`/product-details-two/${cartDetail.productId}`}>
-                                    {products.find((product) => product.id === cartDetail.productId) &&
-                                      products.find((product) => product.id === cartDetail.productId).name}
+                                    {products.find((product) => product.id === cartDetail.productId).name}
                                   </Link>
                                 </td>
                                 <td className="product-price">
-                                  {products.find((product) => product.id === cartDetail.productId) &&
-                                    products
-                                      .find((product) => product.id === cartDetail.productId)
-                                      .salePrice.toFixed(2)}{" "}
+                                  {products
+                                    .find((product) => product.id === cartDetail.productId)
+                                    .salePrice.toFixed(2)}{" "}
                                   TL
                                 </td>
                                 <td className="">

@@ -12,6 +12,8 @@ import { useAuth } from "oidc-react";
 import React, { useState, useEffect } from "react";
 import { IKImage } from "imagekitio-react";
 import { removeFromCart } from "../../../app/slices/cart";
+import { getFavoriteByUserId } from "../../../app/slices/favorite";
+import { removeFromFavorite } from "../../../app/slices/favorite";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -20,7 +22,9 @@ const Header = () => {
   const user = useSelector((state) => state.users.user);
   const userId = user ? user.id : null;
   const cart = useSelector((state) => state.carts.cart);
+  const favorite = useSelector((state) => state.favorites.favorite);
   const products = useSelector((state) => state.products.products);
+
   let cartTotal = null;
   if (user && cart && products) {
     cart.cartDetails.map(
@@ -33,15 +37,17 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(getCartByUserId({ userId: userId }));
+    dispatch(getFavoriteByUserId({ userId: userId }));
   }, [dispatch, userId]);
 
   const [click, setClick] = useState(false);
   const history = useNavigate();
 
-  const favorites = null;
-
   const removeDetailFromCart = async (cartDetailId) => {
     dispatch(removeFromCart({ cartDetailId: cartDetailId, token: user.token }));
+  };
+  const removeDetailFromFavorite = async (favoriteDetailId) => {
+    dispatch(removeFromFavorite({ favoriteDetailId: favoriteDetailId, token: user.token }));
   };
 
   const handleClick = () => {
@@ -125,10 +131,10 @@ const Header = () => {
                   </div>
                   <ul className="header-action-link action-color--black action-hover-color--golden">
                     <li>
-                      {favorites && favorites.length ? (
+                      {user && favorite && favorite.favoriteDetails.length ? (
                         <a href="#offcanvas-wishlish" className="offcanvas-toggle" onClick={handleWish}>
                           <i className="fa fa-heart"></i>
-                          <span className="item-count">{favorites.length}</span>
+                          <span className="item-count">{favorite.favoriteDetails.length}</span>
                         </a>
                       ) : (
                         <a href="#offcanvas-wishlish" className="offcanvas-toggle">
@@ -138,7 +144,7 @@ const Header = () => {
                       )}
                     </li>
                     <li>
-                      {cart && cart.cartDetails.length ? (
+                      {user && cart && cart.cartDetails.length ? (
                         <a href="#!" className="offcanvas-toggle" onClick={handleClick}>
                           <i className="fa fa-shopping-bag"></i>
                           <span className="item-count">{cart.cartDetails.length}</span>
@@ -203,10 +209,10 @@ const Header = () => {
                     </a>
                   </li>
                   <li>
-                    {favorites && favorites.length ? (
+                    {favorite && favorite.favoriteDetails.length ? (
                       <a href="#offcanvas-wishlish" className="offcanvas-toggle" onClick={handleWish}>
                         <i className="fa fa-heart"></i>
-                        <span className="item-count">{favorites.length}</span>
+                        <span className="item-count">{favorite.favoriteDetails.length}</span>
                       </a>
                     ) : (
                       <a href="#offcanvas-wishlish" className="offcanvas-toggle">
@@ -357,50 +363,50 @@ const Header = () => {
           <ul className="offcanvas-cart">
             {cart &&
               products &&
-              cart.cartDetails.map((data) => (
-                <li className="offcanvas-wishlist-item-single" key={data.id}>
-                  <div className="offcanvas-wishlist-item-block">
-                    <Link
-                      to={`/product-details-two/${data.productId}`}
-                      className="offcanvas-wishlist-item-image-link"
-                    >
-                      <IKImage
-                        path={`/ProductImages/${
-                          products.find((product) => product.id === data.productId) &&
-                          products.find((product) => product.id === data.productId).images.split(",")[0]
-                        }`}
-                        className="offcanvas-wishlist-image"
-                      />
-                    </Link>
-                    <div className="offcanvas-wishlist-item-content">
-                      <Link
-                        to={`/product-details-two/${data.productId}`}
-                        className="offcanvas-wishlist-item-link"
-                      >
-                        {products.find((product) => product.id === data.productId) &&
-                          products.find((product) => product.id === data.productId).name}
-                      </Link>
-                      <div className="offcanvas-wishlist-item-details">
-                        <span className="offcanvas-wishlist-item-details-price">
-                          {products.find((product) => product.id === data.productId) &&
-                            products.find((product) => product.id === data.productId).salePrice.toFixed(2)}
-                          TL
-                        </span>
-                        <span className="offcanvas-wishlist-item-details-quantity"> x{data.count}</span>
+              cart.cartDetails.map(
+                (data) =>
+                  products.find((product) => product.id === data.productId) && (
+                    <li className="offcanvas-wishlist-item-single" key={data.id}>
+                      <div className="offcanvas-wishlist-item-block">
+                        <Link
+                          to={`/product-details-two/${data.productId}`}
+                          className="offcanvas-wishlist-item-image-link"
+                        >
+                          <IKImage
+                            path={`/ProductImages/${
+                              products.find((product) => product.id === data.productId).images.split(",")[0]
+                            }`}
+                            className="offcanvas-wishlist-image"
+                          />
+                        </Link>
+                        <div className="offcanvas-wishlist-item-content">
+                          <Link
+                            to={`/product-details-two/${data.productId}`}
+                            className="offcanvas-wishlist-item-link"
+                          >
+                            {products.find((product) => product.id === data.productId).name}
+                          </Link>
+                          <div className="offcanvas-wishlist-item-details">
+                            <span className="offcanvas-wishlist-item-details-price">
+                              {products.find((product) => product.id === data.productId).salePrice.toFixed(2)}
+                              TL
+                            </span>
+                            <span className="offcanvas-wishlist-item-details-quantity"> x{data.count}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="offcanvas-wishlist-item-delete text-right">
-                    <a
-                      href="#!"
-                      className="offcanvas-wishlist-item-delete"
-                      onClick={() => removeDetailFromCart(data.id)}
-                    >
-                      <i className="fa fa-trash"></i>
-                    </a>
-                  </div>
-                </li>
-              ))}
+                      <div className="offcanvas-wishlist-item-delete text-right">
+                        <a
+                          href="#!"
+                          className="offcanvas-wishlist-item-delete"
+                          onClick={() => removeDetailFromCart(data.id)}
+                        >
+                          <i className="fa fa-trash"></i>
+                        </a>
+                      </div>
+                    </li>
+                  )
+              )}
           </ul>
           <div className="offcanvas-cart-total-price">
             <span className="offcanvas-cart-total-price-text">Toplam :</span>
@@ -432,39 +438,50 @@ const Header = () => {
           <h4 className="offcanvas-title">Favoriler</h4>
 
           <ul className="offcanvas-wishlist">
-            {favorites &&
-              favorites.map((data, index) => (
-                <li className="offcanvas-wishlist-item-single" key={index}>
-                  <div className="offcanvas-wishlist-item-block">
-                    <Link
-                      to={`/product-details-one/${data.id}`}
-                      className="offcanvas-wishlist-item-image-link"
-                    >
-                      <img src={data.img} alt="img" className="offcanvas-wishlist-image" />
-                    </Link>
-                    <div className="offcanvas-wishlist-item-content">
-                      <Link to={`/product-details-one/${data.id}`} className="offcanvas-wishlist-item-link">
-                        {data.title}
-                      </Link>
-                      <div className="offcanvas-wishlist-item-details">
-                        <span className="offcanvas-wishlist-item-details-quantity">1 x</span>
-                        <span className="offcanvas-wishlist-item-details-price">{data.price}</span>
+            {favorite &&
+              favorite.favoriteDetails.map(
+                (data) =>
+                  products.find((product) => product.id === data.productId) && (
+                    <li className="offcanvas-wishlist-item-single" key={data.id}>
+                      <div className="offcanvas-wishlist-item-block">
+                        <Link
+                          to={`/product-details-two/${data.productId}`}
+                          className="offcanvas-wishlist-item-image-link"
+                        >
+                          <IKImage
+                            path={`/ProductImages/${
+                              products.find((product) => product.id === data.productId).images.split(",")[0]
+                            }`}
+                            className="offcanvas-wishlist-image"
+                          />
+                        </Link>
+                        <div className="offcanvas-wishlist-item-content">
+                          <Link
+                            to={`/product-details-two/${data.productId}`}
+                            className="offcanvas-wishlist-item-link"
+                          >
+                            {products.find((product) => product.id === data.productId).name}
+                          </Link>
+                          <div className="offcanvas-wishlist-item-details">
+                            <span className="offcanvas-wishlist-item-details-price">
+                              {products.find((product) => product.id === data.productId).salePrice.toFixed(2)}{" "}
+                              TL
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="offcanvas-wishlist-item-delete text-right">
-                    <a
-                      href="#!"
-                      className="offcanvas-wishlist-item-delete"
-                      onClick={() => {
-                        console.log("delete wishlist clicked");
-                      }}
-                    >
-                      <i className="fa fa-trash"></i>
-                    </a>
-                  </div>
-                </li>
-              ))}
+                      <div className="offcanvas-wishlist-item-delete text-right">
+                        <a
+                          href="#!"
+                          className="offcanvas-wishlist-item-delete"
+                          onClick={() => removeDetailFromFavorite(data.id)}
+                        >
+                          <i className="fa fa-trash"></i>
+                        </a>
+                      </div>
+                    </li>
+                  )
+              )}
           </ul>
           <ul className="offcanvas-wishlist-action-button">
             <li>
