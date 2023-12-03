@@ -23,7 +23,7 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
 
 
         public CartAPICheckOutController(ICartRepository cartRepository,
-            ICouponRepository couponRepository, IProductRepository productRepository,IRabbitMQCartMessageSender rabbitMQCartMessageSender)
+            ICouponRepository couponRepository, IProductRepository productRepository, IRabbitMQCartMessageSender rabbitMQCartMessageSender)
         {
             _cartRepository = cartRepository;
             _couponRepository = couponRepository;
@@ -76,7 +76,7 @@ namespace Inveon.Services.ShoppingCartAPI.Controllers
             var request = new CreatePaymentRequest();
             ConfigurePaymentRequest(ref request);
 
-            request.Price = Math.Round(checkoutHeaderDto.OrderTotal, 2).ToString();
+            request.Price = Math.Round(checkoutHeaderDto.OrderTotal + checkoutHeaderDto.DiscountTotal, 2).ToString();
             request.PaidPrice = Math.Round(checkoutHeaderDto.OrderTotal, 2).ToString();
             request.PaymentCard = CreatePaymentCard(checkoutHeaderDto);
 
