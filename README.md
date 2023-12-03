@@ -1,5 +1,5 @@
 # InveShop
-## Inveon FullStack Bootcamp - Graduate Project
+## Inveon FullStack Bootcamp - Final Project
 InveShop is an e-commerce project.
 
 ### Tech Stack
