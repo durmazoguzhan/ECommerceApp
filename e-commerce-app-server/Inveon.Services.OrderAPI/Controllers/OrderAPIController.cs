@@ -50,6 +50,23 @@ namespace Inveon.Services.OrderAPI.Controllers
             return _response;
         }
 
+        [HttpGet]
+        [Route("GetByUserId/{userId}")]
+        public async Task<object> GetByUserId(string userId)
+        {
+            try
+            {
+                IEnumerable<OrderDto> orderDtos = await _orderRepository.GetOrdersByUserId(userId);
+                _response.Result = orderDtos;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
         [HttpPost]
         public async Task<object> Post([FromBody] OrderDto orderDto)
         {

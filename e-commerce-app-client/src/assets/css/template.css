@@ -5125,6 +5125,36 @@ table {
   border-color: var(--primary-color);
   color: #fff;
 }
+.dashboard_tab_button li button {
+  border: 1px solid #e8e8e8;
+  border-bottom: none;
+  color: #212121;
+  font-weight: 500;
+  font-size: 15px;
+  display: block;
+  padding: 18px 15px;
+  text-transform: uppercase;
+  width: 100%;
+  background-color: var(--white-color);
+  text-align: left;
+}
+
+.dashboard_tab_button li button:last-child {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.dashboard_tab_button li button i {
+  font-size: 14px;
+  text-align: center;
+  width: 25px;
+}
+
+.dashboard_tab_button li button.active,
+.dashboard_tab_button li button:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
 
 .add_prod_button {
   position: absolute;

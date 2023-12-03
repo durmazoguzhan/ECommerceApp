@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
     "bootstrap": "^5.2.1",
+    "date-fns": "^2.30.0",
     "imagekitio-react": "^3.0.0",
     "oidc-react": "^3.2.2",
     "p-min-delay": "^4.0.1",

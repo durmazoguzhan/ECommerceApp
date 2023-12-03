@@ -56,5 +56,11 @@ namespace Inveon.Services.OrderAPI.Repository
             List<OrderHeader> orderList = await _db.OrderHeaders.ToListAsync();
             return _mapper.Map<List<OrderDto>>(orderList);
         }
+
+        async Task<IEnumerable<OrderDto>> IOrderRepository.GetOrdersByUserId(string userId)
+        {
+            List<OrderHeader> orderList = await _db.OrderHeaders.Where(header=>header.UserId== userId).ToListAsync();
+            return _mapper.Map<List<OrderDto>>(orderList);
+        }
     }
 }

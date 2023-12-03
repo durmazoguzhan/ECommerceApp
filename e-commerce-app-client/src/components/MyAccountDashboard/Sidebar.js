@@ -1,38 +1,41 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"
-import Swal from 'sweetalert2';
+import React from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useAuth } from "oidc-react";
 
 const Sidebar = () => {
-    const location = useLocation()
-    let dispatch = useDispatch();
-    const history = useNavigate()
-    let status = useSelector((state) => state.user.status);
-    const logout = () => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Çıkış Başarılı',
-            text: 'Teşekkürler'
-        })
-        dispatch({ type: "user/logout" })
-        history("/login");
-    }
-    return (
-        <>
-            <div className="col-sm-12 col-md-12 col-lg-3">
-                <div className="dashboard_tab_button">
-                    <ul role="tablist" className="nav flex-column dashboard-list">
-                        <li> <Link to="/my-account/customer-order" className={location.pathname === '/my-account/customer-order'?'active':null}><i className="fa fa-cart-arrow-down"></i>SİPARİŞLERİM</Link></li>
-                        <li><Link to="/my-account/customer-account-details" className={location.pathname === '/my-account/customer-account-details'?'active':null}><i className="fa fa-user"></i>Profilim</Link></li>
-                        {
-                            status?<li><Link to="/#!" onClick={(e)=>{e.preventDefault();logout()}}><i className="fa fa-sign-out"></i>Çıkış Yap</Link></li>:null
-                        }
-                    </ul>
-                </div>
-            </div>
-        </>
-    )
-}
+  const location = useLocation();
+  let user = useSelector((state) => state.users.user);
+  const auth = useAuth();
+  if (!user) {
+    auth.signIn();
+  }
 
-export default Sidebar
+  return (
+    <>
+      <div className="col-sm-12 col-md-12 col-lg-3">
+        <div className="dashboard_tab_button">
+          <ul role="tablist" className="nav flex-column">
+            <li>
+              <NavLink
+                to="/my-account/customer-order"
+                className={location.pathname === "/my-account/customer-order" ? "active" : null}
+              >
+                <i className="fa fa-cart-arrow-down"></i>SİPARİŞLERİM
+              </NavLink>
+            </li>
+            {user && (
+              <li>
+                <button onClick={() => auth.signOut()}>
+                  <i className="fa fa-sign-out"></i>Çıkış Yap
+                </button>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Sidebar;
