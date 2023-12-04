@@ -18,6 +18,15 @@ const SideBar = (props) => {
     dispatch(getAllCategories());
   }, [dispatch]);
 
+  const setBrandAndFilter = (brand) => {
+    setCurrentBrand(brand);
+    props.filterEvent(currentCategory, currentBrand);
+  };
+  const setCategoryAndFilter = (category) => {
+    setCurrentCategory(category);
+    props.filterEvent(currentCategory, currentBrand);
+  };
+
   return (
     <>
       <div className="col-lg-3">
@@ -53,7 +62,7 @@ const SideBar = (props) => {
                       <label
                         className="custom_boxed"
                         key={category.id}
-                        onClick={() => setCurrentCategory(category)}
+                        onClick={() => setCategoryAndFilter(category)}
                       >
                         {category.name}
                         <input type="radio" name="radio" />
@@ -63,12 +72,13 @@ const SideBar = (props) => {
                 )}
             </form>
           </div>
+
           <div className="shop_sidebar_boxed">
             <h4>Marka</h4>
             <form>
               {brands &&
                 brands.map((brand) => (
-                  <label className="custom_boxed" key={brand.id} onClick={() => setCurrentBrand(brand)}>
+                  <label className="custom_boxed" key={brand.id} onClick={() => setBrandAndFilter(brand)}>
                     {brand.name}
                     <input type="radio" name="radio" />
                     <span className="checkmark"></span>
@@ -82,7 +92,7 @@ const SideBar = (props) => {
                     props.filterEvent(1);
                   }}
                 >
-                  Filtreyi Temizle
+                  FİLTREYİ TEMİZLE
                 </button>
               </div>
             </form>
